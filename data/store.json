@@ -1,0 +1,609 @@
+{
+  "settings": {
+    "storeName": "Typica Coffee Roasters",
+    "currency": "ج.م",
+    "shippingFee": 95,
+    "freeShippingThreshold": 999999,
+    "announcement": "توصيل لجميع محافظات مصر | دفع 95 ج.م مصاريف الشحن مسبقاً وباقي الطلب عند الاستلام",
+    "paymentSettings": {
+      "walletNumber": "01099887766",
+      "walletName": "فودافون كاش / المحافظ الإلكترونية",
+      "instapayId": "typica@instapay",
+      "instapayName": "حساب إنستاباي الرسمي"
+    }
+  },
+  "categories": [
+    {
+      "id": "all",
+      "name": "All Roasts & Gear",
+      "count": 10
+    },
+    {
+      "id": "single-origin",
+      "name": "Single Origin",
+      "count": 4
+    },
+    {
+      "id": "espresso",
+      "name": "Espresso Roasts",
+      "count": 2
+    },
+    {
+      "id": "filter",
+      "name": "Filter Roasts",
+      "count": 2
+    },
+    {
+      "id": "bundles",
+      "name": "Curated Bundles",
+      "count": 2
+    },
+    {
+      "id": "gear",
+      "name": "Brewing Gear",
+      "count": 2
+    }
+  ],
+  "products": [
+    {
+      "id": "p1",
+      "name": "Yirgacheffe Kochere",
+      "origin": "Ethiopia · 2,050 masl",
+      "process": "Washed · Heirloom",
+      "roastLevel": 1,
+      "roastLabel": "Light",
+      "price": 240,
+      "category": "single-origin",
+      "collection": "best-sellers",
+      "notes": [
+        "Bergamot",
+        "Peach",
+        "Jasmine"
+      ],
+      "image": "/assets/roast-1.jpg",
+      "badge": "Best Seller",
+      "stock": 41,
+      "description": "Exquisite high-elevation Ethiopian lot from the famed Kochere washing station. Expect a delicate floral aroma of jasmine followed by bright notes of ripe summer peach and crisp bergamot citrus.",
+      "cuppingScore": 88.5
+    },
+    {
+      "id": "p2",
+      "name": "Cerrado Reserva",
+      "origin": "Brazil · 1,180 masl",
+      "process": "Natural · Yellow Bourbon",
+      "roastLevel": 4,
+      "roastLabel": "Medium Dark",
+      "price": 210,
+      "category": "single-origin",
+      "collection": "best-sellers",
+      "notes": [
+        "Cocoa",
+        "Hazelnut",
+        "Brown Sugar"
+      ],
+      "image": "/assets/roast-3.jpg",
+      "badge": "Popular",
+      "stock": 30,
+      "description": "Full-bodied and comforting, this Brazilian Yellow Bourbon delivers velvety milk chocolate sweetness, roasted hazelnuts, and a caramelized brown sugar finish.",
+      "cuppingScore": 86
+    },
+    {
+      "id": "p3",
+      "name": "Nocturne Espresso",
+      "origin": "House Blend · Colombia & Sumatra",
+      "process": "Blend · Washed & Wet-Hulled",
+      "roastLevel": 5,
+      "roastLabel": "Dark",
+      "price": 230,
+      "category": "espresso",
+      "collection": "best-sellers",
+      "notes": [
+        "Dark Chocolate",
+        "Fig",
+        "Molasses"
+      ],
+      "image": "/assets/espresso.jpg",
+      "badge": "Signature",
+      "stock": 59,
+      "description": "Crafted specifically for rich, viscous espresso extractions and milk pairings. Dense crema with profound bittersweet dark chocolate, dried fig, and smoky molasses undertones.",
+      "cuppingScore": 87
+    },
+    {
+      "id": "p4",
+      "name": "Huila Pink Bourbon",
+      "origin": "Colombia · 1,780 masl",
+      "process": "Anaerobic · Pink Bourbon",
+      "roastLevel": 2,
+      "roastLabel": "Light Medium",
+      "price": 280,
+      "category": "single-origin",
+      "collection": "new-arrivals",
+      "notes": [
+        "Lychee",
+        "Red Apple",
+        "Wild Honey"
+      ],
+      "image": "/assets/roast-2.jpg",
+      "badge": "Micro-Lot",
+      "stock": 18,
+      "description": "Rare mutation of Red and Yellow Bourbon cultivated in Huila. 48-hour anaerobic cherry fermentation yields intoxicating tropical sweetness of lychee, crisp Fuji apple, and wild honey.",
+      "cuppingScore": 89.5
+    },
+    {
+      "id": "p5",
+      "name": "Kirinyaga AA",
+      "origin": "Kenya · 1,900 masl",
+      "process": "Washed · SL28 & SL34",
+      "roastLevel": 2,
+      "roastLabel": "Light Medium",
+      "price": 260,
+      "category": "single-origin",
+      "collection": "new-arrivals",
+      "notes": [
+        "Blackcurrant",
+        "Grapefruit",
+        "Cane Sugar"
+      ],
+      "image": "/assets/origins.jpg",
+      "badge": "New Lot",
+      "stock": 25,
+      "description": "Classic high-acidity Kenyan profile with deep blackcurrant juiciness, vibrant pink grapefruit zest, and a crystalline sparkling cane sugar sweetness on the palate.",
+      "cuppingScore": 88
+    },
+    {
+      "id": "p6",
+      "name": "Antigua Volcán",
+      "origin": "Guatemala · 1,650 masl",
+      "process": "Washed · Caturra",
+      "roastLevel": 3,
+      "roastLabel": "Medium",
+      "price": 220,
+      "category": "filter",
+      "collection": "new-arrivals",
+      "notes": [
+        "Toffee",
+        "Orange Peel",
+        "Almond"
+      ],
+      "image": "/assets/roast-3.jpg",
+      "badge": "Staff Pick",
+      "stock": 38,
+      "description": "Grown in nutrient-dense volcanic soils between three volcanoes in the Antigua valley. Perfectly balanced cup with buttery toffee, candied orange peel, and toasted almond finish.",
+      "cuppingScore": 86.5
+    },
+    {
+      "id": "b1",
+      "name": "The Origins Trio",
+      "origin": "Three 250g Single-Origin Lots",
+      "process": "Curated Tasting Set",
+      "roastLevel": 2,
+      "roastLabel": "Varied",
+      "price": 640,
+      "originalPrice": 720,
+      "category": "bundles",
+      "collection": "bundles",
+      "notes": [
+        "Ethiopia",
+        "Colombia",
+        "Guatemala"
+      ],
+      "image": "/assets/bundle.jpg",
+      "badge": "وفر 80 ج.م$8",
+      "stock": 20,
+      "description": "A curated journey through the world's most expressive coffee terroirs. Includes full 250g bags of Yirgacheffe Kochere, Huila Pink Bourbon, and Antigua Volcán in a custom gift box.",
+      "cuppingScore": 88
+    },
+    {
+      "id": "b2",
+      "name": "Espresso Discovery Pair",
+      "origin": "Two 250g Espresso Lots",
+      "process": "Dual Roast Profiles",
+      "roastLevel": 4,
+      "roastLabel": "Medium to Dark",
+      "price": 400,
+      "originalPrice": 440,
+      "category": "bundles",
+      "collection": "bundles",
+      "notes": [
+        "Nocturne Blend",
+        "Cerrado Single"
+      ],
+      "image": "/assets/promo.jpg",
+      "badge": "Bundle Deal",
+      "stock": 15,
+      "description": "Compare our signature Nocturne dark roast with the creamy Cerrado single-origin espresso. Designed for home baristas seeking dialed-in perfection.",
+      "cuppingScore": 86.8
+    },
+    {
+      "id": "g1",
+      "name": "Precision Conical Hand Grinder",
+      "origin": "Matte Black & Walnut Wood",
+      "process": "48mm CNC Stainless Steel Burrs",
+      "roastLevel": 0,
+      "roastLabel": "Gear",
+      "price": 850,
+      "category": "gear",
+      "collection": "gear",
+      "notes": [
+        "Stepless",
+        "Zero Retention",
+        "Ultra-Uniform"
+      ],
+      "image": "/assets/gear.jpg",
+      "badge": "Pro Gear",
+      "stock": 14,
+      "description": "High-grade CNC cut stainless steel conical burrs ensuring laser-focused grind distribution from fine Turkish and Espresso to coarse Cold Brew. Dual bearings for effortless grinding.",
+      "cuppingScore": 99
+    },
+    {
+      "id": "g2",
+      "name": "Artisan Ceramic Dripper & Server",
+      "origin": "Handcrafted Glazed Stoneware",
+      "process": "Thermal Stability Ribbing",
+      "roastLevel": 0,
+      "roastLabel": "Gear",
+      "price": 420,
+      "category": "gear",
+      "collection": "gear",
+      "notes": [
+        "600ml Server",
+        "Heat Retentive",
+        "Minimalist"
+      ],
+      "image": "/assets/craft.jpg",
+      "badge": "Handmade",
+      "stock": 22,
+      "description": "Individually thrown ceramic pour-over cone paired with a 600ml borosilicate glass carafe. Internal spiral ribs optimize water contact time and extraction balance.",
+      "cuppingScore": 95
+    }
+  ],
+  "orders": [
+    {
+      "id": "TYP-9135",
+      "date": "2026-09-28T16:37:17.793Z",
+      "customer": {
+        "name": "سارة محمود",
+        "email": "",
+        "phone": "01123456789",
+        "phone2": "",
+        "governorate": "الجيزة",
+        "city": "الدقي",
+        "address": "شارع التحرير"
+      },
+      "items": [
+        {
+          "id": "p2",
+          "name": "Cerrado Reserva",
+          "price": 210,
+          "quantity": 1
+        }
+      ],
+      "subtotal": 210,
+      "shipping": 95,
+      "total": 305,
+      "shippingDepositPaid": 0,
+      "codAmount": 305,
+      "paymentMethod": "cod",
+      "senderNumber": "",
+      "receiptImage": "",
+      "transferNote": "",
+      "status": "confirmed",
+      "statusHistory": [
+        {
+          "status": "confirmed",
+          "time": "2026-09-28 16:37",
+          "desc": "تم تسجيل الطلب - الدفع عند الاستلام نقداً بالكامل للمندوب (إجمالي التحصيل: 305 ج.م)"
+        }
+      ]
+    },
+    {
+      "id": "TYP-8319",
+      "date": "2026-09-28T16:37:17.790Z",
+      "customer": {
+        "name": "كريم أحمد",
+        "email": "",
+        "phone": "01012345678",
+        "phone2": "",
+        "governorate": "القاهرة",
+        "city": "المعادي",
+        "address": "شارع 9 عمارة 12"
+      },
+      "items": [
+        {
+          "id": "p1",
+          "name": "Yirgacheffe Kochere",
+          "price": 240,
+          "quantity": 1
+        }
+      ],
+      "subtotal": 240,
+      "shipping": 95,
+      "total": 335,
+      "shippingDepositPaid": 95,
+      "codAmount": 240,
+      "paymentMethod": "instapay",
+      "senderNumber": "01012345678",
+      "receiptImage": "/assets/receipts/rece_1790613437779_4l8jf.png",
+      "transferNote": "",
+      "status": "confirmed",
+      "statusHistory": [
+        {
+          "status": "confirmed",
+          "time": "2026-09-28 16:37",
+          "desc": "تم تسجيل الطلب - تم تحويل 95 ج.م مصاريف شحن عبر إنستاباي (المتبقي عند الاستلام: 240 ج.م)"
+        }
+      ]
+    },
+    {
+      "id": "TYP-1141",
+      "date": "2026-09-21T11:55:29.229Z",
+      "customer": {
+        "name": "محمود عادل",
+        "email": "",
+        "phone": "01012345678",
+        "phone2": "01123456789",
+        "governorate": "الإسكندرية",
+        "city": "سموحة",
+        "address": "شارع فوزي معاذ، عمارة 8، الدور الثاني"
+      },
+      "items": [
+        {
+          "price": 240,
+          "quantity": 2,
+          "name": "Yirgacheffe Kochere",
+          "id": "p1"
+        }
+      ],
+      "subtotal": 480,
+      "shipping": 95,
+      "total": 575,
+      "shippingDepositPaid": 95,
+      "codAmount": 480,
+      "paymentMethod": "instapay",
+      "senderNumber": "01012345678",
+      "transferNote": "",
+      "status": "confirmed",
+      "statusHistory": [
+        {
+          "status": "confirmed",
+          "time": "2026-09-21 11:55",
+          "desc": "تم تسجيل الطلب - مسدد 95 ج.م شحن عبر إنستاباي (المتبقي عند الاستلام: 480 ج.م)"
+        }
+      ]
+    },
+    {
+      "id": "TYP-7931",
+      "date": "2026-09-21T11:40:48.646Z",
+      "customer": {
+        "name": "Abdallah younes",
+        "email": "abdallahbody967@gmail.com",
+        "phone": "01283256717",
+        "address": "الشرقيه بلبيس ابو نصيب"
+      },
+      "items": [
+        {
+          "id": "p2",
+          "name": "Cerrado Reserva",
+          "price": 21,
+          "image": "/assets/roast-3.jpg",
+          "weight": "250g",
+          "grind": "Whole Bean",
+          "quantity": 1
+        },
+        {
+          "id": "p3",
+          "name": "Nocturne Espresso",
+          "price": 23,
+          "image": "/assets/espresso.jpg",
+          "weight": "250g",
+          "grind": "Whole Bean",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 44,
+      "shipping": 5,
+      "total": 49,
+      "status": "confirmed",
+      "statusHistory": [
+        {
+          "status": "confirmed",
+          "time": "2026-09-21 11:40",
+          "desc": "Order placed & queued for small-batch roasting"
+        }
+      ]
+    },
+    {
+      "id": "TYP-6452",
+      "date": "2026-09-21T11:33:33.892Z",
+      "customer": {
+        "name": "Test Barista",
+        "email": "test@typica.coffee",
+        "phone": "",
+        "address": "10 Roastery Way"
+      },
+      "items": [
+        {
+          "price": 24,
+          "quantity": 1,
+          "name": "Yirgacheffe Kochere",
+          "id": "p1"
+        }
+      ],
+      "subtotal": 24,
+      "shipping": 5,
+      "total": 29,
+      "status": "confirmed",
+      "statusHistory": [
+        {
+          "status": "confirmed",
+          "time": "2026-09-21 11:33",
+          "desc": "Order placed & queued for small-batch roasting"
+        },
+        {
+          "status": "delivered",
+          "time": "2026-09-21 12:51",
+          "desc": "Delivered to customer address"
+        },
+        {
+          "status": "roasting",
+          "time": "2026-09-21 12:51",
+          "desc": "Master roaster started batch profile"
+        },
+        {
+          "status": "confirmed",
+          "time": "2026-09-21 12:51",
+          "desc": "Order confirmed"
+        }
+      ]
+    },
+    {
+      "id": "TYP-1001",
+      "date": "2026-09-18T10:15:00Z",
+      "customer": {
+        "name": "Sarah Jenkins",
+        "email": "sarah.j@example.com",
+        "phone": "+1 (555) 234-8901",
+        "address": "742 Evergreen Terrace, Springfield, OR"
+      },
+      "items": [
+        {
+          "id": "p1",
+          "name": "Yirgacheffe Kochere",
+          "price": 24,
+          "weight": "250g",
+          "grind": "Whole Bean",
+          "quantity": 2
+        }
+      ],
+      "subtotal": 48,
+      "shipping": 0,
+      "total": 48,
+      "status": "delivered",
+      "statusHistory": [
+        {
+          "status": "confirmed",
+          "time": "2026-09-18 10:15",
+          "desc": "Order placed and confirmed"
+        },
+        {
+          "status": "roasting",
+          "time": "2026-09-18 12:30",
+          "desc": "Small-batch roast completed"
+        },
+        {
+          "status": "quality_check",
+          "time": "2026-09-18 14:00",
+          "desc": "Cupping test & packaging verified"
+        },
+        {
+          "status": "dispatched",
+          "time": "2026-09-19 09:00",
+          "desc": "Handed to courier with express shipping"
+        },
+        {
+          "status": "delivered",
+          "time": "2026-09-20 15:45",
+          "desc": "Delivered to front door"
+        }
+      ]
+    },
+    {
+      "id": "TYP-1002",
+      "date": "2026-09-19T14:40:00Z",
+      "customer": {
+        "name": "David Miller",
+        "email": "david.m@example.com",
+        "phone": "+44 20 7946 0912",
+        "address": "128 Baker Street, Marylebone, London"
+      },
+      "items": [
+        {
+          "id": "b1",
+          "name": "The Origins Trio",
+          "price": 64,
+          "weight": "3x250g",
+          "grind": "Pour Over / Filter",
+          "quantity": 1
+        },
+        {
+          "id": "p3",
+          "name": "Nocturne Espresso",
+          "price": 23,
+          "weight": "250g",
+          "grind": "Espresso",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 87,
+      "shipping": 0,
+      "total": 87,
+      "status": "dispatched",
+      "statusHistory": [
+        {
+          "status": "confirmed",
+          "time": "2026-09-19 14:40",
+          "desc": "Order placed and payment received"
+        },
+        {
+          "status": "roasting",
+          "time": "2026-09-20 08:30",
+          "desc": "Fresh batch roasted to medium profile"
+        },
+        {
+          "status": "quality_check",
+          "time": "2026-09-20 11:15",
+          "desc": "Sealed in one-way degassing valve bags"
+        },
+        {
+          "status": "dispatched",
+          "time": "2026-09-21 07:45",
+          "desc": "In transit via Air Cargo Express"
+        }
+      ]
+    },
+    {
+      "id": "TYP-1003",
+      "date": "2026-09-21T09:20:00Z",
+      "customer": {
+        "name": "Elena Rostova",
+        "email": "elena.r@example.com",
+        "phone": "+33 1 42 68 55 00",
+        "address": "45 Rue de Rivoli, 75001 Paris, France"
+      },
+      "items": [
+        {
+          "id": "g1",
+          "name": "Precision Conical Hand Grinder",
+          "price": 85,
+          "weight": "Gear",
+          "grind": "Hardware",
+          "quantity": 1
+        },
+        {
+          "id": "p4",
+          "name": "Huila Pink Bourbon",
+          "price": 28,
+          "weight": "250g",
+          "grind": "Whole Bean",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 113,
+      "shipping": 0,
+      "total": 113,
+      "status": "roasting",
+      "statusHistory": [
+        {
+          "status": "confirmed",
+          "time": "2026-09-21 09:20",
+          "desc": "Order received and scheduled for artisan roasting"
+        },
+        {
+          "status": "roasting",
+          "time": "2026-09-21 11:00",
+          "desc": "Currently in roasting profile at 204°C"
+        }
+      ]
+    }
+  ]
+}

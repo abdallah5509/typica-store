@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Typica | Luxury Small-Batch Specialty Coffee Roasters</title>
+  <meta name="description" content="Artisan single-origin coffees, espresso blends, and precision brewing gear roasted to order." />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">
+    <span id="announcement-text">🚚 شحن سريع لجميع محافظات مصر | دفع 95 ج.م مصاريف الشحن مسبقاً وباقي الطلب عند الاستلام</span>
+  </div>
+
+  <!-- Main Navigation -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <div class="logo-symbol">T</div>
+        <div>
+          <span class="logo-text">Typica</span>
+          <span class="logo-subtitle">Specialty Roasters</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#products" class="active">Shop Roasts</a></li>
+        <li><a href="#story">Craft & Story</a></li>
+        <li><a href="#track" onclick="openTrackModal(); return false;">Track Order</a></li>
+        <li><a href="#admin" style="color: var(--copper); font-weight: 500;">Roastery Portal</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Search bar -->
+        <div style="position: relative; display: flex; align-items: center;">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search origin, notes..."
+            style="padding: 8px 14px 8px 32px; border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.8125rem; background: #fff; width: 180px; transition: width 0.3s;"
+            onfocus="this.style.width='220px'"
+            onblur="this.style.width='180px'"
+          />
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position: absolute; left: 12px; color: var(--text-muted); pointer-events: none;">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </div>
+
+        <!-- Cart Trigger Button -->
+        <button id="btn-cart-toggle" class="btn-icon" aria-label="Open Shopping Bag">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <span id="cart-badge" class="cart-badge" style="display: none;">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- STOREFRONT VIEW -->
+  <div id="store-view">
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <img src="/assets/hero.jpg" alt="Artisan Coffee Roasting" class="hero-bg" />
+      <div class="hero-gradient"></div>
+      <div class="hero-content">
+        <div class="hero-tag">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>
+          Direct-Trade Micro-Lots · Roasted to Order
+        </div>
+        <h1 class="hero-title">Coffee crafted with <em>intention</em>, roasted for nuance.</h1>
+        <p class="hero-desc">
+          Sustainably sourced single-origin coffees and bespoke espresso blends roasted weekly on our vintage cast-iron drum roasters.
+        </p>
+        <div class="hero-buttons">
+          <a href="#products" class="btn-primary">
+            Explore Seasonal Lots
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <button onclick="openProductModal('b1')" class="btn-secondary">The Origins Trio</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Craft & Roasting Philosophy -->
+    <section class="section" id="story">
+      <div class="story-grid">
+        <div class="story-img-wrap">
+          <img src="/assets/craft.jpg" alt="Pour over brewing and cupping" />
+          <div class="story-badge">
+            <div class="story-badge-num">88+</div>
+            <div class="story-badge-txt">SCA Specialty Cupping Score Standard</div>
+          </div>
+        </div>
+        <div>
+          <span class="section-tag">Roastery Philosophy</span>
+          <h2 class="story-title">Honoring the producer, dialed for clarity.</h2>
+          <p class="story-text">
+            Every green coffee cherry carries the unique soil chemistry, rainfall, and sunshine of its high-altitude terroir. We roast in ultra-small 12kg batches, utilizing precision gas pressure profiles to preserve floral aromatics and natural honeyed sweetness.
+          </p>
+          <div class="story-metrics">
+            <div class="metric-item">
+              <h4>100%</h4>
+              <p>Direct Origin Trade</p>
+            </div>
+            <div class="metric-item">
+              <h4>48h</h4>
+              <p>Roast to Dispatch</p>
+            </div>
+            <div class="metric-item">
+              <h4>2,050m</h4>
+              <p>Peak Lot Elevation</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Catalog Section -->
+    <section class="section" id="products">
+      <div class="section-header">
+        <span class="section-tag">Seasonal Selection</span>
+        <h2 class="section-title">Fresh Micro-Lots & Blends</h2>
+        <p class="section-subtitle">
+          Select your favorite origin, choose your custom grind size, and receive whole beans or precision-milled coffee within days of roasting.
+        </p>
+      </div>
+
+      <!-- Categories Filter Tabs -->
+      <div id="filter-tabs" class="filter-tabs"></div>
+
+      <!-- Products Grid -->
+      <div id="products-grid" class="products-grid">
+        <!-- Rendered by app.js -->
+      </div>
+    </section>
+
+    <!-- Curated Tasting Feature -->
+    <section style="background: var(--sand); padding: 80px 24px; margin-top: 40px;">
+      <div style="max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; align-items: center;">
+        <div>
+          <span class="section-tag">Exclusive Tasting Set</span>
+          <h2 class="font-serif" style="font-size: 2.5rem; color: var(--espresso); margin-bottom: 16px;">The Origins Tasting Flight</h2>
+          <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 24px;">
+            Can't decide between crisp floral Ethiopian washed lots and dense Brazilian chocolate notes? Our curated flight pairs three distinct origins side-by-side with customized brew guides.
+          </p>
+          <button class="btn-primary" onclick="openProductModal('b1')">اكتشف الباقة (640 ج.م)</button>
+        </div>
+        <div style="border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md);">
+          <img src="/assets/bundle.jpg" alt="Origins Trio Bundle" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ADMIN VIEW -->
+  <div id="admin-view" class="section admin-section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
+      <div>
+        <span class="section-tag">Roastery Management Console</span>
+        <h1 class="font-serif" style="font-size: 2.5rem; color: var(--espresso);">Admin Dashboard</h1>
+      </div>
+      <div style="display: flex; gap: 12px;">
+        <button class="btn-secondary" style="color: var(--espresso); border-color: var(--border-color);" onclick="window.location.hash='';">
+          ← Back to Storefront
+        </button>
+        <button class="btn-primary" onclick="openAddProductModal()">
+          + Add New Coffee Lot
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Stat Cards -->
+    <div id="admin-stats" class="stats-grid"></div>
+
+    <!-- Admin Navigation Tabs -->
+    <div style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+      <button id="tab-btn-orders" class="filter-tab active admin-nav-btn" onclick="switchAdminTab('orders')">Orders & Fulfillment</button>
+      <button id="tab-btn-products" class="filter-tab admin-nav-btn" onclick="switchAdminTab('products')">Inventory & Products</button>
+      <button id="tab-btn-settings" class="filter-tab admin-nav-btn" onclick="switchAdminTab('settings')">Store Settings</button>
+    </div>
+
+    <!-- Orders Panel -->
+    <div id="admin-orders-panel">
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer & Phone</th>
+              <th>Governorate & City</th>
+              <th>Items</th>
+              <th>Deposit Paid (95 EGP) & COD</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="orders-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Products Panel -->
+    <div id="admin-products-panel" style="display: none;">
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Thumbnail</th>
+              <th>Coffee / Item Name</th>
+              <th>Category</th>
+              <th>Unit Price</th>
+              <th>Stock Qty</th>
+              <th>Manage</th>
+            </tr>
+          </thead>
+          <tbody id="products-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div id="admin-settings-panel" style="display: none;">
+      <div style="background: #fff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 32px; max-width: 680px;">
+        <h3 class="font-serif" style="font-size: 1.5rem; margin-bottom: 20px;">إعدادات الدفع والشحن المسبق (إدارة المحافظ وإنستاباي)</h3>
+        <form id="settings-form" onsubmit="handleSettingsSubmit(event)">
+          <div style="margin-bottom: 18px;">
+            <label style="display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 6px;">
+              حساب إنستاباي (InstaPay Username / Phone) *
+            </label>
+            <input type="text" id="setting-instapay" required placeholder="typica@instapay أو 01012345678" style="width: 100%; padding: 11px; border: 1px solid var(--border-color); border-radius: 4px; font-weight: 600;" value="typica@instapay" />
+            <span style="font-size: 0.75rem; color: var(--text-muted);">هذا الحساب سيظهر للعميل في صفحة الدفع مع زر نسخ فوري</span>
+          </div>
+
+          <div style="margin-bottom: 18px;">
+            <label style="display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 6px;">
+              رقم المحفظة الإلكترونية (فودافون كاش / اتصالات / أورنج / وي) *
+            </label>
+            <input type="text" id="setting-wallet" required placeholder="01099887766" style="width: 100%; padding: 11px; border: 1px solid var(--border-color); border-radius: 4px; font-weight: 600;" value="01099887766" />
+            <span style="font-size: 0.75rem; color: var(--text-muted);">رقم الكاش الذي يقوم العميل بتحويل مصاريف الشحن إليه</span>
+          </div>
+
+          <div style="margin-bottom: 18px;">
+            <label style="display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 6px;">
+              قيمة مصاريف الشحن المطلوبة مسبقاً (ج.م) *
+            </label>
+            <input type="number" id="setting-shipping" required style="width: 100%; padding: 11px; border: 1px solid var(--border-color); border-radius: 4px; font-weight: 600;" value="95" />
+            <span style="font-size: 0.75rem; color: var(--text-muted);">المبلغ الثابت المطلوب سداده الآن لتأكيد الشحن (الافتراضي 95 ج.م)</span>
+          </div>
+
+          <div style="margin-bottom: 24px;">
+            <label style="display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 6px;">شريط الإعلانات أعلى المتجر</label>
+            <input type="text" id="setting-announcement" style="width: 100%; padding: 11px; border: 1px solid var(--border-color); border-radius: 4px;" value="توصيل لجميع محافظات مصر | دفع 95 ج.م مصاريف الشحن مسبقاً وباقي الطلب عند الاستلام" />
+          </div>
+
+          <button type="submit" class="btn-primary" style="font-size: 0.9375rem; padding: 12px 28px;">حفظ وتحديث الإعدادات</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SLIDE-OVER CART DRAWER -->
+  <div id="cart-overlay" class="cart-drawer-overlay"></div>
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <div style="display: flex; align-items: baseline; gap: 8px;">
+        <h3 class="cart-title font-serif">Your Roastery Bag</h3>
+      </div>
+      <button id="btn-cart-close" class="modal-close" style="position: static;">✕</button>
+    </div>
+
+    <!-- Shipping Bar -->
+    <div class="cart-progress">
+      <div id="free-shipping-text">🚚 رسوم الشحن 95 ج.م مسبقاً — المنتجات تُدفع عند الاستلام</div>
+      <div class="progress-bar-wrap">
+        <div id="free-shipping-bar" class="progress-bar-fill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Cart Items -->
+    <div id="cart-items" class="cart-items"></div>
+
+    <!-- Cart Footer -->
+    <div class="cart-footer">
+      <div class="cart-summary-row">
+        <span>إجمالي المنتجات:</span>
+        <span id="cart-subtotal">0.00 ج.م</span>
+      </div>
+      <div class="cart-summary-row">
+        <span>مصاريف الشحن:</span>
+        <span id="cart-shipping">95.00 ج.م</span>
+      </div>
+      <div class="cart-summary-row total">
+        <span>المطلوب للتأكيد:</span>
+        <span id="cart-total">0.00 ج.م</span>
+      </div>
+      <button class="btn-checkout" onclick="openCheckoutModal()">
+        متابعة إتمام الطلب الشحن ←
+      </button>
+    </div>
+  </div>
+
+  <!-- PRODUCT QUICK VIEW MODAL -->
+  <div id="product-modal" class="modal-overlay">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeProductModal()">✕</button>
+      <div id="product-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div id="checkout-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 680px; padding: 32px;">
+      <button class="modal-close" onclick="closeCheckoutModal()">✕</button>
+      <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
+        <span class="section-tag" style="margin-bottom: 0;">إتمام الطلب والشحن</span>
+      </div>
+      <h2 class="font-serif" style="font-size: 1.85rem; color: var(--espresso); margin-bottom: 16px;">
+        بيانات الشحن وتأكيد الطلب
+      </h2>
+
+      <!-- Notice for Upfront Shipping Payment (95 EGP) -->
+      <div class="deposit-notice-box" dir="rtl">
+        <div style="font-size: 1.4rem; color: var(--copper); line-height: 1;">⚠️</div>
+        <div>
+          <div class="deposit-notice-title">نظام تأكيد الشحن لجميع المحافظات</div>
+          <div class="deposit-notice-desc">
+            لضمان جدية الاستلام وتجهيز الشحنة فوراً، <strong>يتم تحويل مصاريف الشحن فقط (95 ج.م) مسبقاً</strong> عبر (إنستاباي أو المحفظة الإلكترونية)، <strong>وباقي ثمن المنتجات يُدفع نقداً عند الاستلام</strong> بعد وصول مندوب الشحن ومعاينة طلبك.
+          </div>
+        </div>
+      </div>
+
+      <form id="checkout-form" onsubmit="handlePlaceOrder(event); return false;">
+        <!-- Customer details -->
+        <div class="egypt-form-group">
+          <label class="egypt-form-label">الاسم بالكامل *</label>
+          <input type="text" id="cust-name" required placeholder="مثال: أحمد محمد علي" class="egypt-form-input" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;" class="egypt-form-group">
+          <div>
+            <label class="egypt-form-label">رقم الهاتف الأساسي (واتساب) *</label>
+            <input type="tel" id="cust-phone" required placeholder="01xxxxxxxxx" class="egypt-form-input" />
+          </div>
+          <div>
+            <label class="egypt-form-label">رقم هاتف إضافي (اختياري)</label>
+            <input type="tel" id="cust-phone2" placeholder="01xxxxxxxxx" class="egypt-form-input" />
+          </div>
+        </div>
+
+        <!-- Governorate Selection (All 27 Governorates of Egypt) -->
+        <div class="egypt-form-group">
+          <label class="egypt-form-label">المحافظة *</label>
+          <select id="cust-governorate" required class="egypt-form-select">
+            <option value="" disabled selected>اختر محافظتك من القائمة...</option>
+            <option value="القاهرة">القاهرة</option>
+            <option value="الجيزة">الجيزة</option>
+            <option value="الإسكندرية">الإسكندرية</option>
+            <option value="القليوبية">القليوبية</option>
+            <option value="الدقهلية">الدقهلية</option>
+            <option value="الشرقية">الشرقية</option>
+            <option value="الغربية">الغربية</option>
+            <option value="المنوفية">المنوفية</option>
+            <option value="البحيرة">البحيرة</option>
+            <option value="كفر الشيخ">كفر الشيخ</option>
+            <option value="دمياط">دمياط</option>
+            <option value="بورسعيد">بورسعيد</option>
+            <option value="الإسماعيلية">الإسماعيلية</option>
+            <option value="السويس">السويس</option>
+            <option value="الفيوم">الفيوم</option>
+            <option value="بني سويف">بني سويف</option>
+            <option value="المنيا">المنيا</option>
+            <option value="أسيوط">أسيوط</option>
+            <option value="سوهاج">سوهاج</option>
+            <option value="قنا">قنا</option>
+            <option value="الأقصر">الأقصر</option>
+            <option value="أسوان">أسوان</option>
+            <option value="البحر الأحمر">البحر الأحمر</option>
+            <option value="مطروح">مطروح</option>
+            <option value="الوادي الجديد">الوادي الجديد</option>
+            <option value="شمال سيناء">شمال سيناء</option>
+            <option value="جنوب سيناء">جنوب سيناء</option>
+          </select>
+        </div>
+
+        <!-- Town / City -->
+        <div class="egypt-form-group">
+          <label class="egypt-form-label">المركز / المدينة / اسم البلد *</label>
+          <input type="text" id="cust-city" required placeholder="مثال: مدينة نصر، المعادي، المحلة الكبرى، دمنهور..." class="egypt-form-input" />
+        </div>
+
+        <!-- Detailed Area & Street -->
+        <div class="egypt-form-group">
+          <label class="egypt-form-label">العنوان بالتفصيل (الشارع، رقم العمارة، الشقة، علامة مميزة) *</label>
+          <input type="text" id="cust-address" required placeholder="مثال: شارع الجامعة، عمارة 15 الدور الرابع بجوار مسجد..." class="egypt-form-input" />
+        </div>
+
+        <!-- Price Breakdown (Highlighting 95 EGP upfront vs COD) -->
+        <div class="checkout-split-summary" dir="rtl">
+          <div class="split-row">
+            <span>إجمالي قيمة المنتجات:</span>
+            <span id="checkout-subtotal" style="font-weight: 600;">0.00 ج.م</span>
+          </div>
+          <div class="split-row">
+            <span>مصاريف الشحن والتوصيل السريع:</span>
+            <span id="checkout-shipping" style="font-weight: 600;">95.00 ج.م</span>
+          </div>
+          <div class="split-row highlight-paynow">
+            <span>المطلوب سداده الآن لتأكيد الشحن:</span>
+            <span id="checkout-deposit-required">95.00 ج.م</span>
+          </div>
+          <div class="split-row highlight-cod">
+            <span>المتبقي للدفع نقداً عند الاستلام (COD):</span>
+            <span id="checkout-cod-remaining">0.00 ج.م</span>
+          </div>
+        </div>
+
+        <!-- Payment Method Selection -->
+        <div style="margin-bottom: 20px;">
+          <label class="egypt-form-label" style="font-weight: 600; font-size: 0.9375rem; margin-bottom: 8px;">
+            اختر وسيلة الدفع المناسبة لك: *
+          </label>
+          
+          <div class="payment-method-selector">
+            <div id="method-opt-instapay" class="payment-card-option active" onclick="selectPaymentMethod('instapay')">
+              <input type="radio" name="pay-method" value="instapay" checked class="payment-card-radio" />
+              <div>
+                <div style="font-weight: 600; font-size: 0.875rem;">إنستاباي (InstaPay)</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">تحويل 95 ج.م شحن مسبقاً</div>
+              </div>
+            </div>
+
+            <div id="method-opt-wallet" class="payment-card-option" onclick="selectPaymentMethod('wallet')">
+              <input type="radio" name="pay-method" value="wallet" class="payment-card-radio" />
+              <div>
+                <div style="font-weight: 600; font-size: 0.875rem;">محفظة إلكترونية (كاش)</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">فودافون/اتصالات/أورنج/وي</div>
+              </div>
+            </div>
+
+            <div id="method-opt-cod" class="payment-card-option" onclick="selectPaymentMethod('cod')">
+              <input type="radio" name="pay-method" value="cod" class="payment-card-radio" />
+              <div>
+                <div style="font-weight: 600; font-size: 0.875rem;">الدفع عند الاستلام (COD)</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">نقداً بالكامل عند وصول الشحنة</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transfer Details Container (Visible for InstaPay & Wallet) -->
+          <div id="transfer-payment-details">
+            <!-- Dynamic Transfer Box with Copy Button -->
+            <div class="transfer-info-card">
+              <div id="transfer-label" style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 4px;">
+                حساب إنستاباي للتحويل (اضغط نسخ ثم حوّل من تطبيقك):
+              </div>
+              <div class="transfer-row">
+                <div id="transfer-display-val" class="transfer-value">typica@instapay</div>
+                <button type="button" class="btn-copy" onclick="copyTransferValue()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <span id="copy-btn-text">نسخ</span>
+                </button>
+              </div>
+              <div id="transfer-name-info" style="font-size: 0.75rem; color: var(--copper); margin-top: 6px; font-weight: 500;">
+                * تأكد من إتمام تحويل الـ 95 ج.م ورفع صورة الإيصال بالأسفل لتأكيد الأوردر فوراً.
+              </div>
+            </div>
+
+            <!-- Sender Verification Field -->
+            <div class="egypt-form-group">
+              <label class="egypt-form-label">
+                رقم الهاتف المحول منه أو اسم صاحب الحساب (لتأكيد العملية) *
+              </label>
+              <input type="text" id="cust-sender-number" placeholder="مثال: 01012345678 أو اسمك في إنستاباي" class="egypt-form-input" />
+            </div>
+
+            <!-- Screenshot Receipt Upload Field -->
+            <div class="egypt-form-group">
+              <label class="egypt-form-label">
+                صورة إيصال التحويل (اسكرين شوت الدفع) *
+              </label>
+              <div class="receipt-dropzone" id="receipt-dropzone" onclick="document.getElementById('cust-receipt-file').click()">
+                <input type="file" id="cust-receipt-file" accept="image/*" style="display: none;" onchange="handleReceiptFileSelect(this)" />
+                <div id="receipt-dropzone-empty">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto; display: block; color: var(--copper);">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                  </svg>
+                  <div style="font-weight: 600; font-size: 0.875rem; margin-top: 6px; color: var(--espresso);">اضغط هنا لرفع اسكرين شوت التحويل</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">يدعم صور JPG, PNG من الموبايل أو الكمبيوتر</div>
+                </div>
+                <div id="receipt-dropzone-preview" style="display: none; position: relative;">
+                  <img id="receipt-preview-img" src="" alt="إيصال الدفع" style="max-height: 180px; max-width: 100%; border-radius: 6px; border: 1px solid var(--border-color); display: block; margin: 0 auto;" />
+                  <button type="button" class="btn-remove-receipt" onclick="event.stopPropagation(); clearReceiptImage();">✕ تغيير الإيصال</button>
+                  <div style="font-size: 0.75rem; color: #059669; font-weight: 600; margin-top: 6px;">✓ تم إرفاق صورة إيصال التحويل بنجاح</div>
+                </div>
+              </div>
+              <div id="receipt-error-msg" style="color: #dc2626; font-size: 0.8125rem; margin-top: 4px; display: none;">
+                ⚠️ يرجى رفع صورة إيصال التحويل (اسكرين شوت) لتأكيد الأوردر
+              </div>
+            </div>
+          </div>
+
+          <!-- Cash on Delivery Notice (Visible only for COD) -->
+          <div id="cod-payment-details" style="display: none;">
+            <div class="cod-reassurance-box" dir="rtl">
+              <div class="cod-icon">💵</div>
+              <div>
+                <div class="cod-title">الدفع نقداً بالكامل عند الاستلام (COD)</div>
+                <div class="cod-desc">
+                  لا تحتاج إلى أي تحويل مسبق. سيتم تجهيز طلبك فوراً ودفع كامل القيمة (المنتجات + 95 ج.م مصاريف الشحن) لمندوب شركة الشحن عند باب بيتك بعد فحص ومعاينة طلبك.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="btn-place-order" class="btn-primary" style="width: 100%; justify-content: center; font-size: 1rem; padding: 15px;">
+          تأكيد الأوردر وإرسال بيانات الشحن (المطلوب 95 ج.م) ←
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ORDER CONFIRMATION MODAL -->
+  <div id="confirm-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 580px;">
+      <div id="confirm-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- ORDER TRACKING MODAL -->
+  <div id="track-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 720px; padding: 36px;">
+      <button class="modal-close" onclick="closeTrackModal()">✕</button>
+      <span class="section-tag">Real-Time Logistics</span>
+      <h2 class="font-serif" style="font-size: 2rem; color: var(--espresso); margin-bottom: 12px;">Track Your Roastery Batch</h2>
+      <p style="color: var(--text-muted); font-size: 0.9375rem; margin-bottom: 24px;">
+        Enter your order reference code (e.g. <code>TYP-1001</code>) to view cupping, packing, and courier delivery milestones.
+      </p>
+
+      <form id="track-form" style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <input type="text" id="track-input" placeholder="TYP-1001" required style="flex-grow: 1; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 4px; font-weight: 600; text-transform: uppercase;" />
+        <button type="submit" class="btn-primary">Locate Shipment</button>
+      </form>
+
+      <div id="track-results"></div>
+    </div>
+  </div>
+
+  <!-- ADD PRODUCT MODAL (ADMIN) -->
+  <div id="add-product-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 600px; padding: 36px;">
+      <button class="modal-close" onclick="closeAddProductModal()">✕</button>
+      <span class="section-tag">Catalog Management</span>
+      <h2 class="font-serif" style="font-size: 2rem; color: var(--espresso); margin-bottom: 20px;">Add New Specialty Lot</h2>
+
+      <form onsubmit="handleAddProductSubmit(event)">
+        <div style="margin-bottom: 14px;">
+          <label style="font-size: 0.8125rem; font-weight: 500; display: block; margin-bottom: 4px;">Coffee Name / اسم المنتج *</label>
+          <input type="text" id="new-prod-name" required placeholder="e.g. Geisha Panama Esmeralda" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;" />
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label style="font-size: 0.8125rem; font-weight: 500; display: block; margin-bottom: 4px;">Origin & Altitude / المصدر</label>
+            <input type="text" id="new-prod-origin" placeholder="Panama · 1,800 masl" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;" />
+          </div>
+          <div>
+            <label style="font-size: 0.8125rem; font-weight: 500; display: block; margin-bottom: 4px;">Category / القسم</label>
+            <select id="new-prod-cat" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; background: #fff;">
+              <option value="single-origin">Single Origin</option>
+              <option value="espresso">Espresso Roasts</option>
+              <option value="filter">Filter Roasts</option>
+              <option value="bundles">Curated Bundles</option>
+              <option value="gear">Brewing Gear</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label style="font-size: 0.8125rem; font-weight: 500; display: block; margin-bottom: 4px;">السعر (ج.م) *</label>
+            <input type="number" id="new-prod-price" required placeholder="240" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;" />
+          </div>
+          <div>
+            <label style="font-size: 0.8125rem; font-weight: 500; display: block; margin-bottom: 4px;">درجة التحميص (1-5)</label>
+            <input type="number" id="new-prod-roast" min="0" max="5" value="2" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;" />
+          </div>
+          <div>
+            <label style="font-size: 0.8125rem; font-weight: 500; display: block; margin-bottom: 4px;">الكمية بالمخزن</label>
+            <input type="number" id="new-prod-stock" value="30" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;" />
+          </div>
+        </div>
+        <!-- Product Image Upload Field -->
+        <div style="margin-bottom: 14px;">
+          <label style="font-size: 0.8125rem; font-weight: 500; display: block; margin-bottom: 4px;">صورة المنتج (اختر صورة من جهازك)</label>
+          <input type="file" id="new-prod-file" accept="image/*" onchange="previewNewProductFile(this)" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background: #fff;" />
+          <div id="new-prod-preview-wrap" style="display: none; margin-top: 10px; align-items: center; gap: 10px;">
+            <img id="new-prod-preview-img" src="" alt="معاينة الصورة" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-color);" />
+            <span style="font-size: 0.8125rem; color: #059669; font-weight: 600;">✓ تم اختيار الصورة</span>
+          </div>
+        </div>
+        <div style="margin-bottom: 24px;">
+          <label style="font-size: 0.8125rem; font-weight: 500; display: block; margin-bottom: 4px;">Flavor Notes (comma separated)</label>
+          <input type="text" id="new-prod-notes" placeholder="Jasmine, Peach, Meyer Lemon" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;" />
+        </div>
+        <button type="submit" id="btn-save-product" class="btn-primary" style="width: 100%; justify-content: center;">حفظ وإضافة إلى الكتالوج</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="#" class="logo" style="color: #fff;">
+          <div class="logo-symbol" style="background: var(--copper); color: #fff;">T</div>
+          <div>
+            <span class="logo-text" style="color: #fff;">Typica</span>
+            <span class="logo-subtitle" style="color: var(--sand);">Specialty Roasters</span>
+          </div>
+        </a>
+        <p>
+          Dedicated to uncompromised clarity, sweet terroir, and deep direct partnerships with specialty coffee producers worldwide.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h5>Coffee Roasts</h5>
+        <ul>
+          <li><a href="#products">Single Origins</a></li>
+          <li><a href="#products">Espresso Blends</a></li>
+          <li><a href="#products">Curated Bundles</a></li>
+          <li><a href="#products">Cold Brew Filters</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Customer Care</h5>
+        <ul>
+          <li><a href="#track" onclick="openTrackModal(); return false;">Track Your Order</a></li>
+          <li><a href="#story">Brewing Ratios & Guides</a></li>
+          <li><a href="#">Subscription Policy</a></li>
+          <li><a href="#">Contact Roasters</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Roastery Portals</h5>
+        <ul>
+          <li><a href="#admin">Admin Dashboard</a></li>
+          <li><a href="#admin">Inventory Control</a></li>
+          <li><a href="#admin">Fulfillment Portal</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2026 Typica Coffee Roasters. Handcrafted for coffee connoisseurs.</div>
+      <div>
+        <a href="#admin" style="color: var(--copper); text-decoration: none; font-weight: 500;">Roastery Admin Login →</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- IMAGE LIGHTBOX MODAL (FOR VIEWING RECEIPTS) -->
+  <div id="image-lightbox-modal" class="lightbox-modal" onclick="closeImageLightbox()">
+    <button class="lightbox-close" onclick="closeImageLightbox()">✕</button>
+    <img id="lightbox-img" class="lightbox-img" src="" alt="صورة إيصال التحويل" onclick="event.stopPropagation()" />
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/app.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>
