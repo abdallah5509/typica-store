@@ -29,7 +29,6 @@
         <li><a href="#products" class="active">Shop Roasts</a></li>
         <li><a href="#story">Craft & Story</a></li>
         <li><a href="#track" onclick="openTrackModal(); return false;">Track Order</a></li>
-        <li><a href="#admin" style="color: var(--copper); font-weight: 500;">Roastery Portal</a></li>
       </ul>
 
       <div class="nav-actions">
@@ -69,20 +68,19 @@
       <img src="/assets/hero.jpg" alt="Artisan Coffee Roasting" class="hero-bg" />
       <div class="hero-gradient"></div>
       <div class="hero-content">
-        <div class="hero-tag">
+        <div class="hero-tag" style="direction:rtl;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>
-          Direct-Trade Micro-Lots · Roasted to Order
+          قهوة مختارة بعناية · محمّصة لك طازجة
         </div>
-        <h1 class="hero-title">Coffee crafted with <em>intention</em>, roasted for nuance.</h1>
-        <p class="hero-desc">
-          Sustainably sourced single-origin coffees and bespoke espresso blends roasted weekly on our vintage cast-iron drum roasters.
+        <h1 class="hero-title" style="direction:rtl;">طعم من <em>خيال</em></h1>
+        <p class="hero-desc" style="direction:rtl;">
+          قهوة أصيلة من أفضل المزارع، محمّصة أسبوعياً بأعلى معايير الجودة.
         </p>
         <div class="hero-buttons">
           <a href="#products" class="btn-primary">
-            Explore Seasonal Lots
+            تسوّق الآن
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
-          <button onclick="openProductModal('b1')" class="btn-secondary">The Origins Trio</button>
         </div>
       </div>
     </section>
@@ -161,20 +159,53 @@
 
   <!-- ADMIN VIEW -->
   <div id="admin-view" class="section admin-section">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
-      <div>
-        <span class="section-tag">Roastery Management Console</span>
-        <h1 class="font-serif" style="font-size: 2.5rem; color: var(--espresso);">Admin Dashboard</h1>
+    <!-- Login Form (Shown when not authenticated) -->
+    <div id="admin-login-card" style="max-width: 420px; margin: 60px auto; background: #fff; padding: 36px; border-radius: var(--radius-sm); box-shadow: var(--shadow-md); border: 1px solid var(--border-color); text-align: right;" dir="rtl">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="width: 52px; height: 52px; background: var(--cream); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: var(--copper); font-size: 1.5rem; margin-bottom: 12px;">🔒</div>
+        <h2 class="font-serif" style="font-size: 1.75rem; color: var(--espresso); margin-bottom: 6px;">لوحة تحكم المتجر</h2>
+        <p style="font-size: 0.875rem; color: var(--text-muted);">هذه المنطقة مخصصة لإدارة المتجر فقط</p>
       </div>
-      <div style="display: flex; gap: 12px;">
-        <button class="btn-secondary" style="color: var(--espresso); border-color: var(--border-color);" onclick="window.location.hash='';">
-          ← Back to Storefront
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+        <div style="margin-bottom: 16px;">
+          <label style="font-size: 0.8125rem; font-weight: 600; display: block; margin-bottom: 6px; color: var(--espresso);">اسم المستخدم</label>
+          <input type="text" id="admin-user-input" required autocomplete="username" placeholder="admin" style="width: 100%; padding: 11px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 0.9375rem; direction: ltr;" />
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="font-size: 0.8125rem; font-weight: 600; display: block; margin-bottom: 6px; color: var(--espresso);">كلمة المرور</label>
+          <input type="password" id="admin-pass-input" required autocomplete="current-password" placeholder="••••" style="width: 100%; padding: 11px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 0.9375rem; direction: ltr;" />
+        </div>
+        <div id="admin-login-error" style="display: none; background: #fee2e2; color: #b91c1c; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.8125rem; margin-bottom: 16px; font-weight: 500;"></div>
+        <button type="submit" id="admin-login-btn" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px;">
+          تسجيل الدخول ←
         </button>
-        <button class="btn-primary" onclick="openAddProductModal()">
-          + Add New Coffee Lot
-        </button>
-      </div>
+        <div style="text-align: center; margin-top: 16px;">
+          <a href="#" onclick="window.location.hash=''; return false;" style="font-size: 0.8125rem; color: var(--text-muted); text-decoration: underline;">
+            العودة للمتجر الرئيسي
+          </a>
+        </div>
+      </form>
     </div>
+
+    <!-- Authenticated Admin Content (Hidden until valid login) -->
+    <div id="admin-content" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <span class="section-tag">Roastery Management Console</span>
+          <h1 class="font-serif" style="font-size: 2.5rem; color: var(--espresso);">Admin Dashboard</h1>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn-secondary" style="color: var(--espresso); border-color: var(--border-color);" onclick="window.location.hash='';">
+            ← المتجر الرئيسي
+          </button>
+          <button class="btn-primary" onclick="openAddProductModal()">
+            + إضافة محصول جديد
+          </button>
+          <button class="btn-secondary" style="color: #b91c1c; border-color: #fca5a5;" onclick="handleAdminLogout()">
+            🚪 تسجيل خروج
+          </button>
+        </div>
+      </div>
 
     <!-- Live Stat Cards -->
     <div id="admin-stats" class="stats-grid"></div>
@@ -263,8 +294,9 @@
         </form>
       </div>
     </div>
+    </div> <!-- /#admin-content -->
 
-  </div>
+  </div> <!-- /#admin-view -->
 
   <!-- SLIDE-OVER CART DRAWER -->
   <div id="cart-overlay" class="cart-drawer-overlay"></div>
@@ -653,19 +685,19 @@
       </div>
 
       <div class="footer-col">
-        <h5>Roastery Portals</h5>
+        <h5>About Us</h5>
         <ul>
-          <li><a href="#admin">Admin Dashboard</a></li>
-          <li><a href="#admin">Inventory Control</a></li>
-          <li><a href="#admin">Fulfillment Portal</a></li>
+          <li><a href="#story">Our Sourcing</a></li>
+          <li><a href="#story">Roasting Philosophy</a></li>
+          <li><a href="#story">Sustainability</a></li>
         </ul>
       </div>
     </div>
 
     <div class="footer-bottom">
       <div>© 2026 Typica Coffee Roasters. Handcrafted for coffee connoisseurs.</div>
-      <div>
-        <a href="#admin" style="color: var(--copper); text-decoration: none; font-weight: 500;">Roastery Admin Login →</a>
+      <div style="font-size: 0.8125rem; color: var(--text-muted);">
+        Cairo, Egypt · All rights reserved
       </div>
     </div>
   </footer>

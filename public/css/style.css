@@ -183,7 +183,7 @@ header {
   position: relative;
   background: var(--espresso-dark);
   color: var(--cream);
-  min-height: 82vh;
+  min-height: 50vh;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -210,7 +210,7 @@ header {
   z-index: 10;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 60px 24px;
+  padding: 36px 24px;
   width: 100%;
 }
 
@@ -227,7 +227,7 @@ header {
 }
 
 .hero-title {
-  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  font-size: clamp(1.75rem, 3.5vw, 2.8rem);
   line-height: 1.05;
   margin-bottom: 24px;
   max-width: 720px;

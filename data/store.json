@@ -104,7 +104,7 @@
       ],
       "image": "/assets/espresso.jpg",
       "badge": "Signature",
-      "stock": 59,
+      "stock": 57,
       "description": "Crafted specifically for rich, viscous espresso extractions and milk pairings. Dense crema with profound bittersweet dark chocolate, dried fig, and smoky molasses undertones.",
       "cuppingScore": 87
     },
@@ -258,6 +258,88 @@
     }
   ],
   "orders": [
+    {
+      "id": "TYP-1416",
+      "date": "2026-10-05T16:46:23.554Z",
+      "customer": {
+        "name": "dggdg",
+        "email": "",
+        "phone": "011111111",
+        "phone2": "011111111",
+        "governorate": "بني سويف",
+        "city": "fsfsf",
+        "address": "بني سويف - fsfsf - sfsfsfs"
+      },
+      "items": [
+        {
+          "id": "p3",
+          "name": "Nocturne Espresso",
+          "price": 230,
+          "image": "/assets/espresso.jpg",
+          "weight": "250g",
+          "grind": "Whole Bean",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 230,
+      "shipping": 95,
+      "total": 325,
+      "shippingDepositPaid": 0,
+      "codAmount": 325,
+      "paymentMethod": "cod",
+      "senderNumber": "",
+      "receiptImage": "",
+      "transferNote": "",
+      "status": "confirmed",
+      "statusHistory": [
+        {
+          "status": "confirmed",
+          "time": "2026-10-05 16:46",
+          "desc": "تم تسجيل الطلب - الدفع عند الاستلام نقداً بالكامل للمندوب (إجمالي التحصيل: 325 ج.م)"
+        }
+      ]
+    },
+    {
+      "id": "TYP-9714",
+      "date": "2026-10-05T16:46:23.550Z",
+      "customer": {
+        "name": "dggdg",
+        "email": "",
+        "phone": "011111111",
+        "phone2": "011111111",
+        "governorate": "بني سويف",
+        "city": "fsfsf",
+        "address": "بني سويف - fsfsf - sfsfsfs"
+      },
+      "items": [
+        {
+          "id": "p3",
+          "name": "Nocturne Espresso",
+          "price": 230,
+          "image": "/assets/espresso.jpg",
+          "weight": "250g",
+          "grind": "Whole Bean",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 230,
+      "shipping": 95,
+      "total": 325,
+      "shippingDepositPaid": 0,
+      "codAmount": 325,
+      "paymentMethod": "cod",
+      "senderNumber": "",
+      "receiptImage": "",
+      "transferNote": "",
+      "status": "confirmed",
+      "statusHistory": [
+        {
+          "status": "confirmed",
+          "time": "2026-10-05 16:46",
+          "desc": "تم تسجيل الطلب - الدفع عند الاستلام نقداً بالكامل للمندوب (إجمالي التحصيل: 325 ج.م)"
+        }
+      ]
+    },
     {
       "id": "TYP-9135",
       "date": "2026-09-28T16:37:17.793Z",

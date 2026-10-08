@@ -8,8 +8,74 @@ let adminState = {
 
 let newProductImageBase64 = null;
 
+// --- AUTH TOKEN MANAGEMENT ---
+const ADMIN_TOKEN_KEY = 'typica_admin_token';
+
+function getAdminToken() {
+  return localStorage.getItem(ADMIN_TOKEN_KEY);
+}
+
+function setAdminToken(token) {
+  localStorage.setItem(ADMIN_TOKEN_KEY, token);
+}
+
+function clearAdminToken() {
+  localStorage.removeItem(ADMIN_TOKEN_KEY);
+}
+
+async function adminFetch(url, options = {}) {
+  const token = getAdminToken();
+  const headers = Object.assign({}, options.headers || {});
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const res = await fetch(url, Object.assign({}, options, { headers }));
+  if (res.status === 401) {
+    clearAdminToken();
+    showAdminLoginForm();
+    throw new Error('جلسة الأدمن انتهت، يرجى تسجيل الدخول مجدداً');
+  }
+  return res;
+}
+
+function showAdminLoginForm() {
+  const loginCard = document.getElementById('admin-login-card');
+  const adminContent = document.getElementById('admin-content');
+  if (loginCard) loginCard.style.display = 'block';
+  if (adminContent) adminContent.style.display = 'none';
+  const userInput = document.getElementById('admin-user-input');
+  if (userInput) userInput.focus();
+}
+
+function showAdminDashboard() {
+  const loginCard = document.getElementById('admin-login-card');
+  const adminContent = document.getElementById('admin-content');
+  if (loginCard) loginCard.style.display = 'none';
+  if (adminContent) adminContent.style.display = 'block';
+}
+
+async function checkAdminAuth() {
+  const token = getAdminToken();
+  if (!token) return false;
+  try {
+    const res = await fetch('/api/admin/verify', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return res.ok;
+  } catch (err) {
+    return false;
+  }
+}
+
 // Initialize Admin View
 async function initAdmin() {
+  const isAuth = await checkAdminAuth();
+  if (!isAuth) {
+    showAdminLoginForm();
+    return;
+  }
+
+  showAdminDashboard();
   await loadAdminStats();
   await loadAdminOrders();
   await loadAdminProducts();
@@ -21,10 +87,71 @@ async function initAdmin() {
   }
 }
 
+// Login Handler
+async function handleAdminLogin(e) {
+  e.preventDefault();
+  const userInput = document.getElementById('admin-user-input');
+  const passInput = document.getElementById('admin-pass-input');
+  const errorBox = document.getElementById('admin-login-error');
+  const loginBtn = document.getElementById('admin-login-btn');
+
+  const username = userInput ? userInput.value.trim() : '';
+  const password = passInput ? passInput.value.trim() : '';
+
+  if (errorBox) errorBox.style.display = 'none';
+  if (loginBtn) {
+    loginBtn.disabled = true;
+    loginBtn.innerText = 'جاري التحقق...';
+  }
+
+  try {
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (data.success && data.token) {
+      setAdminToken(data.token);
+      if (passInput) passInput.value = '';
+      if (typeof showToast === 'function') showToast('مرحباً بك! تم تسجيل الدخول بنجاح');
+      showAdminDashboard();
+      await initAdmin();
+    } else {
+      if (errorBox) {
+        errorBox.innerText = data.error || 'اسم المستخدم أو كلمة المرور غير صحيحة';
+        errorBox.style.display = 'block';
+      }
+      if (passInput) {
+        passInput.value = '';
+        passInput.focus();
+      }
+    }
+  } catch (err) {
+    console.error(err);
+    if (errorBox) {
+      errorBox.innerText = 'حدث خطأ في الاتصال بالسيرفر';
+      errorBox.style.display = 'block';
+    }
+  } finally {
+    if (loginBtn) {
+      loginBtn.disabled = false;
+      loginBtn.innerText = 'تسجيل الدخول ←';
+    }
+  }
+}
+
+function handleAdminLogout() {
+  clearAdminToken();
+  showAdminLoginForm();
+  if (typeof showToast === 'function') showToast('تم تسجيل الخروج بنجاح');
+  window.location.hash = '';
+}
+
 // Load stats
 async function loadAdminStats() {
   try {
-    const res = await fetch('/api/stats');
+    const res = await adminFetch('/api/stats');
     const data = await res.json();
     if (data.success) {
       adminState.stats = data.data;
@@ -38,7 +165,7 @@ async function loadAdminStats() {
 // Load orders
 async function loadAdminOrders() {
   try {
-    const res = await fetch('/api/orders');
+    const res = await adminFetch('/api/orders');
     const data = await res.json();
     if (data.success) {
       adminState.orders = data.data;
@@ -186,22 +313,22 @@ function renderAdminOrders() {
 
 async function updateOrderStatus(orderId, newStatus) {
   try {
-    const res = await fetch(`/api/orders/${orderId}/status`, {
+    const res = await adminFetch(`/api/orders/${orderId}/status`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: newStatus })
     });
     const data = await res.json();
     if (data.success) {
-      showToast(`Order #${orderId} updated to "${newStatus}"`);
+      if (typeof showToast === 'function') showToast(`Order #${orderId} updated to "${newStatus}"`);
       await loadAdminOrders();
       await loadAdminStats();
     } else {
-      showToast(data.error || 'Failed to update order');
+      if (typeof showToast === 'function') showToast(data.error || 'Failed to update order');
     }
   } catch (err) {
     console.error(err);
-    showToast('Network error updating status');
+    if (typeof showToast === 'function') showToast(err.message || 'Network error updating status');
   }
 }
 
@@ -233,14 +360,14 @@ function renderAdminProducts() {
 
 async function updateProductStock(productId, newStock) {
   try {
-    const res = await fetch(`/api/products/${productId}`, {
+    const res = await adminFetch(`/api/products/${productId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ stock: Number(newStock) })
     });
     const data = await res.json();
     if (data.success) {
-      showToast('Stock level updated');
+      if (typeof showToast === 'function') showToast('Stock level updated');
       await loadAdminProducts();
       await loadAdminStats();
     }
@@ -252,10 +379,10 @@ async function updateProductStock(productId, newStock) {
 async function deleteProduct(productId) {
   if (!confirm('Are you sure you want to remove this coffee lot from the roastery catalog?')) return;
   try {
-    const res = await fetch(`/api/products/${productId}`, { method: 'DELETE' });
+    const res = await adminFetch(`/api/products/${productId}`, { method: 'DELETE' });
     const data = await res.json();
     if (data.success) {
-      showToast('Product lot removed');
+      if (typeof showToast === 'function') showToast('Product lot removed');
       await loadAdminProducts();
       await loadAdminStats();
     }
@@ -312,11 +439,11 @@ async function handleAddProductSubmit(e) {
   let imageUrl = '/assets/roast-1.jpg';
 
   try {
-    // If user selected an image file, upload it
+    // If user selected an image file, upload it (authenticated)
     if (newProductImageBase64) {
       const fileInput = document.getElementById('new-prod-file');
       const filename = (fileInput && fileInput.files[0]) ? fileInput.files[0].name : 'product.jpg';
-      const upRes = await fetch('/api/upload', {
+      const upRes = await adminFetch('/api/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -331,7 +458,7 @@ async function handleAddProductSubmit(e) {
       }
     }
 
-    const res = await fetch('/api/products', {
+    const res = await adminFetch('/api/products', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -341,7 +468,7 @@ async function handleAddProductSubmit(e) {
     });
     const data = await res.json();
     if (data.success) {
-      showToast(`تمت إضافة المحصول الجديد: ${name}`);
+      if (typeof showToast === 'function') showToast(`تمت إضافة المحصول الجديد: ${name}`);
       closeAddProductModal();
       e.target.reset();
       newProductImageBase64 = null;
@@ -351,11 +478,11 @@ async function handleAddProductSubmit(e) {
       await loadAdminProducts();
       await loadAdminStats();
     } else {
-      showToast(data.error || 'Failed to add product');
+      if (typeof showToast === 'function') showToast(data.error || 'Failed to add product');
     }
   } catch (err) {
     console.error(err);
-    showToast('Network error adding product');
+    if (typeof showToast === 'function') showToast(err.message || 'Network error adding product');
   } finally {
     if (saveBtn) {
       saveBtn.disabled = false;
@@ -398,7 +525,7 @@ async function handleSettingsSubmit(e) {
   const announcement = document.getElementById('setting-announcement').value.trim();
 
   try {
-    const res = await fetch('/api/settings', {
+    const res = await adminFetch('/api/settings', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -414,19 +541,33 @@ async function handleSettingsSubmit(e) {
     });
     const data = await res.json();
     if (data.success) {
-      showToast('تم حفظ وتحديث أرقام الكاش وإنستاباي ومصاريف الشحن بنجاح!');
+      if (typeof showToast === 'function') showToast('تم حفظ وتحديث أرقام الكاش وإنستاباي ومصاريف الشحن بنجاح!');
       if (typeof loadSettings === 'function') {
         loadSettings();
       }
     }
   } catch (err) {
     console.error(err);
-    showToast('خطأ أثناء حفظ الإعدادات');
+    if (typeof showToast === 'function') showToast(err.message || 'خطأ أثناء حفظ الإعدادات');
   }
+}
+
+// Switch tabs inside admin
+function switchAdminTab(tab) {
+  const tabs = ['orders', 'products', 'settings'];
+  tabs.forEach(t => {
+    const btn = document.getElementById(`tab-btn-${t}`);
+    const panel = document.getElementById(`admin-${t}-panel`);
+    if (btn) btn.classList.toggle('active', t === tab);
+    if (panel) panel.style.display = t === tab ? 'block' : 'none';
+  });
 }
 
 // Global exports
 window.initAdmin = initAdmin;
+window.handleAdminLogin = handleAdminLogin;
+window.handleAdminLogout = handleAdminLogout;
+window.switchAdminTab = switchAdminTab;
 window.openAddProductModal = openAddProductModal;
 window.closeAddProductModal = closeAddProductModal;
 window.handleAddProductSubmit = handleAddProductSubmit;
