@@ -33,14 +33,19 @@ const productModal = document.getElementById('product-modal');
 const checkoutModal = document.getElementById('checkout-modal');
 const trackModal = document.getElementById('track-modal');
 
+// Immediate check for admin view
+if (window.location.hash === '#admin' || window.location.search.includes('admin')) {
+  document.addEventListener('DOMContentLoaded', showAdminView);
+}
+
 // Initialize
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
+  checkRouteHash();
   setupEventListeners();
   updateCartUI();
-  await loadSettings();
-  await loadCategories();
-  await loadProducts();
-  checkRouteHash();
+  loadSettings();
+  loadCategories();
+  loadProducts();
 });
 
 // Hash navigation listener
@@ -48,7 +53,8 @@ window.addEventListener('hashchange', checkRouteHash);
 
 function checkRouteHash() {
   const hash = window.location.hash;
-  if (hash === '#admin') {
+  const search = window.location.search;
+  if (hash === '#admin' || search.includes('admin')) {
     showAdminView();
   } else if (hash.startsWith('#track')) {
     const parts = hash.split('/');

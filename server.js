@@ -181,6 +181,12 @@ const server = http.createServer(async (req, res) => {
   const pathname = parsedUrl.pathname;
   const method = req.method;
 
+  // Quick Redirect /admin to /#admin
+  if (pathname === "/admin" || pathname === "/admin/") {
+    res.writeHead(302, { "Location": "/#admin" });
+    return res.end();
+  }
+
   // CORS pre-flight
   if (method === "OPTIONS") {
     res.writeHead(204, {
