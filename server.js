@@ -22,15 +22,15 @@ let mongoClient = null;
 let db = null;
 let clientPromise = null;
 
-async function getDb() {
+async function getDb(maxWaitMs = 2500) {
   if (db) return db;
   if (!MongoClient || !MONGODB_URI) return null;
   try {
     if (!clientPromise) {
       mongoClient = new MongoClient(MONGODB_URI, {
         maxPoolSize: 10,
-        serverSelectionTimeoutMS: 20000,
-        connectTimeoutMS: 20000
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 5000
       });
       clientPromise = mongoClient.connect().then(c => {
         db = c.db("typica");
@@ -43,6 +43,12 @@ async function getDb() {
         return null;
       });
     }
+
+    if (maxWaitMs > 0) {
+      const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), maxWaitMs));
+      const res = await Promise.race([clientPromise, timeoutPromise]);
+      return res || db;
+    }
     return await clientPromise;
   } catch (e) {
     console.error("getDb error:", e.message);
@@ -52,24 +58,15 @@ async function getDb() {
   }
 }
 
-async function initMongoDB(retries = 6, delay = 2000) {
-  for (let i = 1; i <= retries; i++) {
-    try {
-      console.log(`[DB] Connecting to MongoDB Atlas (attempt ${i}/${retries})...`);
-      const database = await getDb();
-      if (database) {
-        console.log("✅ [DB] Connected successfully to typica database!");
-        return database;
-      }
-    } catch (err) {
-      console.error(`[DB] Attempt ${i} error:`, err.message);
+async function initMongoDB() {
+  try {
+    const database = await getDb(8000);
+    if (database) {
+      console.log("✅ [DB] Background MongoDB Atlas connection ready!");
+    } else {
+      console.log("ℹ️ [DB] Running with local store cache while connecting...");
     }
-    if (i < retries) {
-      await new Promise(r => setTimeout(r, delay));
-    }
-  }
-  console.warn("⚠️ [DB] Continuing with local store fallback.");
-  return null;
+  } catch (e) {}
 }
 
 async function seedMongoIfEmpty() {
@@ -843,15 +840,15 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-// Start server and initialize MongoDB connection
-initMongoDB().then(() => {
-  server.listen(PORT, () => {
-    console.log(`====================================================`);
-    console.log(`☕ Typica Specialty Coffee Server Running!`);
-    console.log(`🌐 Local URL:   http://localhost:${PORT}`);
-    console.log(`📊 Admin Panel: http://localhost:${PORT}/#admin`);
-    console.log(`🚚 Track Order: http://localhost:${PORT}/#track`);
-    console.log(`🗄️ Database:    ${db ? "MongoDB Atlas (Cloud Connected)" : "Local JSON Store"}`);
-    console.log(`====================================================`);
-  });
+// Start server IMMEDIATELY so Render binds to port instantly (<100ms)
+server.listen(PORT, () => {
+  console.log(`====================================================`);
+  console.log(`☕ Typica Specialty Coffee Server Running!`);
+  console.log(`🌐 Local URL:   http://localhost:${PORT}`);
+  console.log(`📊 Admin Panel: http://localhost:${PORT}/#admin`);
+  console.log(`🚚 Track Order: http://localhost:${PORT}/#track`);
+  console.log(`====================================================`);
 });
+
+// Initialize MongoDB in background
+initMongoDB();
