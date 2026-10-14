@@ -76,10 +76,12 @@ async function initAdmin() {
   }
 
   showAdminDashboard();
-  await loadAdminStats();
-  await loadAdminOrders();
-  await loadAdminProducts();
-  await loadAdminSettings();
+  await Promise.allSettled([
+    loadAdminStats(),
+    loadAdminOrders(),
+    loadAdminProducts(),
+    loadAdminSettings()
+  ]);
 
   const settingsForm = document.getElementById('admin-settings-form');
   if (settingsForm) {

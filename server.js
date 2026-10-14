@@ -193,7 +193,6 @@ const server = http.createServer(async (req, res) => {
 
   // --- API ROUTES ---
   if (pathname.startsWith("/api/")) {
-    await getDb();
 
     // POST /api/admin/login
     if (pathname === "/api/admin/login" && method === "POST") {
