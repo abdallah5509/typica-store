@@ -2,9 +2,9 @@
   "settings": {
     "storeName": "Typica Coffee Roasters",
     "currency": "ج.م",
-    "shippingFee": 95,
+    "shippingFee": 70,
     "freeShippingThreshold": 999999,
-    "announcement": "توصيل لجميع محافظات مصر | دفع 95 ج.م مصاريف الشحن مسبقاً وباقي الطلب عند الاستلام",
+    "announcement": "🎉 توصيل مجاني داخل بلبيس الشرقية 🎉",
     "paymentSettings": {
       "walletNumber": "01099887766",
       "walletName": "فودافون كاش / المحافظ الإلكترونية",

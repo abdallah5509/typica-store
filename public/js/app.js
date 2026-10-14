@@ -84,7 +84,7 @@ async function loadSettings() {
     if (data.success) {
       state.settings = data.data;
       if (document.getElementById('announcement-text')) {
-        document.getElementById('announcement-text').innerText = state.settings.announcement || '🚚 شحن سريع لجميع المحافظات | دفع 95 ج.م شحن مسبقاً أو الدفع عند الاستلام';
+        document.getElementById('announcement-text').innerText = state.settings.announcement || '🎉 توصيل مجاني داخل بلبيس الشرقية 🎉';
       }
     }
   } catch (err) {
