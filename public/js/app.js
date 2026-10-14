@@ -228,16 +228,18 @@ function quickAddToCart(productId) {
     image: product.image,
     weight: '250g',
     grind: 'Whole Bean',
+    blendType: 'سادة',
     quantity: 1
   });
 
-  showToast(`تمت إضافة "${product.name}" إلى السلة`);
+  showToast(`تمت إضافة "${product.name}" (سادة) إلى السلة`);
 }
 
 // Add To Cart with options
 function addToCart(item) {
+  if (!item.blendType) item.blendType = 'سادة';
   const existingIndex = state.cart.findIndex(
-    i => i.id === item.id && i.weight === item.weight && i.grind === item.grind
+    i => i.id === item.id && i.weight === item.weight && i.grind === item.grind && i.blendType === item.blendType
   );
 
   if (existingIndex > -1) {
@@ -310,7 +312,10 @@ function updateCartUI() {
       <img src="${item.image}" alt="${item.name}">
       <div class="cart-item-details">
         <div class="cart-item-title">${item.name}</div>
-        <div class="cart-item-meta">${item.weight} · ${item.grind}</div>
+        <div class="cart-item-meta">
+          <span style="background: var(--copper-light); color: var(--copper); padding: 2px 7px; border-radius: 4px; font-weight: 600; font-size: 0.75rem;">${item.blendType || 'سادة'}</span>
+          · ${item.weight} · ${item.grind}
+        </div>
         <div class="cart-item-bottom">
           <div class="cart-qty-ctrl">
             <button class="cart-qty-btn" onclick="updateCartQty(${index}, -1)">-</button>
@@ -363,6 +368,7 @@ function openProductModal(productId) {
   state.currentProduct = product;
   state.activeWeight = '250g';
   state.activeGrind = 'Whole Bean';
+  state.activeBlendType = 'سادة';
 
   const modalBody = document.getElementById('product-modal-content');
   if (!modalBody) return;
@@ -410,6 +416,21 @@ function openProductModal(productId) {
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">${notesHtml}</div>
         </div>
 
+        <!-- Blend Type Selection (سادة / محوّج) -->
+        <div style="margin-bottom: 20px;">
+          <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 8px; font-weight: 600;">
+            نوع البن (التحويجة)
+          </label>
+          <div style="display: flex; gap: 10px;" id="blend-type-selector">
+            <button type="button" class="filter-tab active" onclick="selectBlendType('سادة', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+              <span>☕</span> <span>سادة</span>
+            </button>
+            <button type="button" class="filter-tab" onclick="selectBlendType('محوّج', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+              <span>🌿</span> <span>محوّج</span>
+            </button>
+          </div>
+        </div>
+
         <!-- Weight Selection -->
         <div style="margin-bottom: 20px;">
           <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 8px;">حجم العبوة (Weight)</label>
@@ -455,6 +476,12 @@ function openProductModal(productId) {
   document.body.style.overflow = 'hidden';
 }
 
+function selectBlendType(blendType, btn) {
+  state.activeBlendType = blendType;
+  document.querySelectorAll('#blend-type-selector button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
 function selectWeight(weight, multiplier, btn) {
   state.activeWeight = weight;
   document.querySelectorAll('#weight-selector button').forEach(b => b.classList.remove('active'));
@@ -472,6 +499,7 @@ function addCurrentProductToCart(buyNow = false) {
   const grind = document.getElementById('grind-select').value;
   const priceText = document.getElementById('modal-price').innerText.replace(/[^\d.]/g, '');
   const price = Number(priceText) || state.currentProduct.price;
+  const blend = state.activeBlendType || 'سادة';
 
   addToCart({
     id: state.currentProduct.id,
@@ -480,6 +508,7 @@ function addCurrentProductToCart(buyNow = false) {
     image: state.currentProduct.image,
     weight: state.activeWeight,
     grind: grind,
+    blendType: blend,
     quantity: 1
   });
 
@@ -490,7 +519,7 @@ function addCurrentProductToCart(buyNow = false) {
       openCheckoutModal();
     }, 150);
   } else {
-    showToast(`تمت إضافة ${state.currentProduct.name} (${state.activeWeight}) إلى سلتك`);
+    showToast(`تمت إضافة ${state.currentProduct.name} (${blend} · ${state.activeWeight}) إلى سلتك`);
   }
 }
 
@@ -925,7 +954,7 @@ async function fetchOrderTracking(orderId) {
 
     let itemsHtml = (order.items || []).map(i => `
       <div style="display: flex; justify-content: space-between; font-size: 0.875rem; padding: 8px 0; border-bottom: 1px solid var(--cream);">
-        <span>${i.name} (${i.weight || '250g'} · ${i.grind || 'Whole Bean'}) × ${i.quantity}</span>
+        <span>${i.name} (${i.blendType ? `<span style="background: var(--copper-light); color: var(--copper); padding: 1px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">${i.blendType}</span> · ` : ''}${i.weight || '250g'} · ${i.grind || 'Whole Bean'}) × ${i.quantity}</span>
         <strong>${(i.price * i.quantity).toFixed(2)} ج.م</strong>
       </div>
     `).join('');
@@ -1059,6 +1088,7 @@ window.quickAddToCart = quickAddToCart;
 window.addCurrentProductToCart = addCurrentProductToCart;
 window.openProductModal = openProductModal;
 window.closeProductModal = closeProductModal;
+window.selectBlendType = selectBlendType;
 window.selectWeight = selectWeight;
 window.openCartDrawer = openCartDrawer;
 window.closeCartDrawer = closeCartDrawer;

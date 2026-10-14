@@ -232,7 +232,13 @@ function renderAdminOrders() {
   }
 
   tbody.innerHTML = adminState.orders.map(order => {
-    const itemsSummary = (order.items || []).map(i => `${i.name} (x${i.quantity})`).join(', ');
+    const itemsSummary = (order.items || []).map(i => {
+      const blendBadge = i.blendType === 'محوّج' 
+        ? `<span style="background: #fef3c7; color: #b45309; padding: 1px 6px; border-radius: 3px; font-weight: 700; font-size: 0.75rem;">🌿 محوّج</span>`
+        : `<span style="background: #e0e7ff; color: #3730a3; padding: 1px 6px; border-radius: 3px; font-weight: 700; font-size: 0.75rem;">☕ سادة</span>`;
+      const weightTxt = i.weight ? `<span style="color: var(--text-muted); font-size: 0.75rem;">(${i.weight})</span>` : '';
+      return `<div style="margin-bottom: 4px;"><strong>${i.name}</strong> ${blendBadge} ${weightTxt} × <strong>${i.quantity}</strong></div>`;
+    }).join('');
     const customer = order.customer || {};
     const govCity = `${customer.governorate || 'القاهرة'} - ${customer.city || ''}`;
     const codDue = order.codAmount !== undefined ? order.codAmount : (order.subtotal || 0);
@@ -288,7 +294,7 @@ function renderAdminOrders() {
             ${customer.address || ''}
           </div>
         </td>
-        <td style="max-width: 200px; font-size: 0.8125rem;" title="${itemsSummary}">
+        <td style="min-width: 200px; font-size: 0.8125rem;">
           ${itemsSummary}
         </td>
         <td>
