@@ -20,37 +20,32 @@ const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://abdallahbody967_db
 
 let mongoClient = null;
 let db = null;
-let isConnecting = false;
+let clientPromise = null;
 
 async function getDb() {
   if (db) return db;
   if (!MongoClient || !MONGODB_URI) return null;
-  if (isConnecting) {
-    for (let i = 0; i < 25; i++) {
-      if (db) return db;
-      await new Promise(r => setTimeout(r, 200));
-    }
-  }
-  isConnecting = true;
   try {
-    if (!mongoClient) {
+    if (!clientPromise) {
       mongoClient = new MongoClient(MONGODB_URI, {
-        serverSelectionTimeoutMS: 15000,
-        connectTimeoutMS: 15000,
         maxPoolSize: 10,
-        minPoolSize: 1
+        serverSelectionTimeoutMS: 10000
+      });
+      clientPromise = mongoClient.connect().then(c => {
+        db = c.db("typica");
+        console.log("✅ Successfully connected to MongoDB Atlas!");
+        return db;
+      }).catch(err => {
+        console.error("⚠️ MongoDB connection error:", err.message);
+        clientPromise = null;
+        db = null;
+        return null;
       });
     }
-    await mongoClient.connect();
-    db = mongoClient.db("typica");
-    console.log("✅ Successfully connected to MongoDB Atlas!");
-    return db;
-  } catch (err) {
-    console.error("⚠️ MongoDB connection error:", err.message);
-    db = null;
+    return await clientPromise;
+  } catch (e) {
+    console.error("getDb error:", e.message);
     return null;
-  } finally {
-    isConnecting = false;
   }
 }
 
