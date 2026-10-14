@@ -43,25 +43,9 @@ async function initMongoDB() {
 }
 
 async function seedMongoIfEmpty() {
-  if (!db) return;
-  try {
-    const prodCount = await db.collection("products").countDocuments();
-    if (prodCount === 0 && fs.existsSync(DATA_FILE)) {
-      const initial = JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
-      if (initial.products && initial.products.length > 0) {
-        await db.collection("products").insertMany(initial.products);
-      }
-      if (initial.categories && initial.categories.length > 0) {
-        await db.collection("categories").insertMany(initial.categories);
-      }
-      if (initial.settings) {
-        await db.collection("settings").insertOne({ _id: "store_settings", ...initial.settings });
-      }
-      console.log("✅ Seeded initial products and settings to MongoDB.");
-    }
-  } catch (e) {
-    console.error("Seeding check error:", e.message);
-  }
+  // Disabled permanently: Never overwrite or re-insert default products.
+  // Database state is strictly preserved.
+  return;
 }
 
 // --- ADMIN AUTH ---
