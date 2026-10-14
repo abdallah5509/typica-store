@@ -367,6 +367,7 @@ function openProductModal(productId) {
 
   state.currentProduct = product;
   state.activeWeight = '250g';
+  state.activeWeightMultiplier = 1;
   state.activeGrind = 'Whole Bean';
   state.activeBlendType = 'سادة';
 
@@ -426,7 +427,7 @@ function openProductModal(productId) {
               <span>☕</span> <span>سادة</span>
             </button>
             <button type="button" class="filter-tab" onclick="selectBlendType('محوّج', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
-              <span>🌿</span> <span>محوّج</span>
+              <span>🌿</span> <span>محوّج (+20 ج.م)</span>
             </button>
           </div>
         </div>
@@ -476,21 +477,31 @@ function openProductModal(productId) {
   document.body.style.overflow = 'hidden';
 }
 
+function updateModalPrice() {
+  if (!state.currentProduct) return;
+  const multiplier = state.activeWeightMultiplier || 1;
+  const basePrice = Math.round(state.currentProduct.price * multiplier);
+  const blendExtra = state.activeBlendType === 'محوّج' ? 20 : 0;
+  const finalPrice = basePrice + blendExtra;
+  const priceEl = document.getElementById('modal-price');
+  if (priceEl) {
+    priceEl.innerText = `${finalPrice} ج.م`;
+  }
+}
+
 function selectBlendType(blendType, btn) {
   state.activeBlendType = blendType;
   document.querySelectorAll('#blend-type-selector button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  updateModalPrice();
 }
 
 function selectWeight(weight, multiplier, btn) {
   state.activeWeight = weight;
+  state.activeWeightMultiplier = multiplier;
   document.querySelectorAll('#weight-selector button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-
-  if (state.currentProduct) {
-    const newPrice = Math.round(state.currentProduct.price * multiplier);
-    document.getElementById('modal-price').innerText = `${newPrice} ج.م`;
-  }
+  updateModalPrice();
 }
 
 function addCurrentProductToCart(buyNow = false) {
