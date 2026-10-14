@@ -60,13 +60,24 @@ async function getDb(maxWaitMs = 2500) {
 
 async function initMongoDB() {
   try {
-    const database = await getDb(8000);
+    const database = await getDb(10000);
     if (database) {
       console.log("✅ [DB] Background MongoDB Atlas connection ready!");
+      const count = await database.collection("products").countDocuments();
+      if (count === 0) {
+        const store = getFileStore();
+        if (store.products && store.products.length > 0) {
+          console.log(`[DB] Auto-populating ${store.products.length} products to MongoDB Atlas...`);
+          await database.collection("products").insertMany(store.products);
+          console.log("✅ [DB] Successfully seeded initial products to MongoDB Atlas!");
+        }
+      }
     } else {
       console.log("ℹ️ [DB] Running with local store cache while connecting...");
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error("[DB] Init error:", e.message);
+  }
 }
 
 async function seedMongoIfEmpty() {
@@ -350,8 +361,17 @@ const server = http.createServer(async (req, res) => {
             ];
           }
           results = await database.collection("products").find(query, { projection: { _id: 0 } }).toArray();
-          // Keep local store.json synced with active products from MongoDB
-          if (!category && !search && results.length > 0) {
+          if (results.length === 0 && !category && !search) {
+            const store = getFileStore();
+            if (store.products && store.products.length > 0) {
+              try {
+                await database.collection("products").insertMany(store.products);
+                results = store.products;
+              } catch (e) {
+                results = store.products;
+              }
+            }
+          } else if (!category && !search && results.length > 0) {
             const store = getFileStore();
             store.products = results;
             saveFileStore(store);
