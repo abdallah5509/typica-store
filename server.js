@@ -29,7 +29,8 @@ async function getDb() {
     if (!clientPromise) {
       mongoClient = new MongoClient(MONGODB_URI, {
         maxPoolSize: 10,
-        serverSelectionTimeoutMS: 10000
+        serverSelectionTimeoutMS: 20000,
+        connectTimeoutMS: 20000
       });
       clientPromise = mongoClient.connect().then(c => {
         db = c.db("typica");
@@ -45,12 +46,30 @@ async function getDb() {
     return await clientPromise;
   } catch (e) {
     console.error("getDb error:", e.message);
+    clientPromise = null;
+    db = null;
     return null;
   }
 }
 
-async function initMongoDB() {
-  return await getDb();
+async function initMongoDB(retries = 6, delay = 2000) {
+  for (let i = 1; i <= retries; i++) {
+    try {
+      console.log(`[DB] Connecting to MongoDB Atlas (attempt ${i}/${retries})...`);
+      const database = await getDb();
+      if (database) {
+        console.log("✅ [DB] Connected successfully to typica database!");
+        return database;
+      }
+    } catch (err) {
+      console.error(`[DB] Attempt ${i} error:`, err.message);
+    }
+    if (i < retries) {
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+  console.warn("⚠️ [DB] Continuing with local store fallback.");
+  return null;
 }
 
 async function seedMongoIfEmpty() {
@@ -284,16 +303,23 @@ const server = http.createServer(async (req, res) => {
         try { fs.writeFileSync(targetPath, buffer); } catch (e) {}
 
         // 2. Save permanently to MongoDB collection (survives Render restarts)
-        if (db) {
+        const database = await getDb();
+        if (database) {
           try {
-            await db.collection("uploads").insertOne({
-              _id: uniqueName,
-              folder,
-              filename: uniqueName,
-              mimeType,
-              base64: body.base64,
-              createdAt: new Date()
-            });
+            await database.collection("uploads").updateOne(
+              { _id: uniqueName },
+              {
+                $set: {
+                  _id: uniqueName,
+                  folder,
+                  filename: uniqueName,
+                  mimeType,
+                  base64: body.base64,
+                  createdAt: new Date()
+                }
+              },
+              { upsert: true }
+            );
           } catch (e) {
             console.error("Error saving image to MongoDB:", e.message);
           }
@@ -327,6 +353,12 @@ const server = http.createServer(async (req, res) => {
             ];
           }
           results = await database.collection("products").find(query, { projection: { _id: 0 } }).toArray();
+          // Keep local store.json synced with active products from MongoDB
+          if (!category && !search && results.length > 0) {
+            const store = getFileStore();
+            store.products = results;
+            saveFileStore(store);
+          }
         } else {
           const store = getFileStore();
           results = store.products;
@@ -352,8 +384,9 @@ const server = http.createServer(async (req, res) => {
     const productMatch = pathname.match(/^\/api\/products\/([^\/]+)$/);
     if (productMatch && method === "GET") {
       const id = productMatch[1];
-      if (db) {
-        const prod = await db.collection("products").findOne({ id }, { projection: { _id: 0 } });
+      const database = await getDb();
+      if (database) {
+        const prod = await database.collection("products").findOne({ id }, { projection: { _id: 0 } });
         if (!prod) return sendJSON(res, 404, { success: false, error: "Product not found" });
         return sendJSON(res, 200, { success: true, data: prod });
       } else {
@@ -392,11 +425,12 @@ const server = http.createServer(async (req, res) => {
         const database = await getDb();
         if (database) {
           await database.collection("products").insertOne({ ...newProduct });
-        } else {
-          const store = getFileStore();
-          store.products.push(newProduct);
-          saveFileStore(store);
         }
+        // Always sync with local file store
+        const store = getFileStore();
+        store.products.push(newProduct);
+        saveFileStore(store);
+
         return sendJSON(res, 201, { success: true, data: newProduct });
       } catch (err) {
         return sendJSON(res, 400, { success: false, error: err.message });
@@ -415,6 +449,12 @@ const server = http.createServer(async (req, res) => {
           const r = await database.collection("products").updateOne({ id }, { $set: body });
           if (r.matchedCount === 0) return sendJSON(res, 404, { success: false, error: "Product not found" });
           const updated = await database.collection("products").findOne({ id }, { projection: { _id: 0 } });
+          const store = getFileStore();
+          const index = store.products.findIndex(p => p.id === id);
+          if (index !== -1) {
+            store.products[index] = { ...store.products[index], ...body, id };
+            saveFileStore(store);
+          }
           return sendJSON(res, 200, { success: true, data: updated });
         } else {
           const store = getFileStore();
@@ -436,6 +476,9 @@ const server = http.createServer(async (req, res) => {
       if (database) {
         const r = await database.collection("products").deleteOne({ id });
         if (r.deletedCount === 0) return sendJSON(res, 404, { success: false, error: "Product not found" });
+        const store = getFileStore();
+        store.products = store.products.filter(p => p.id !== id);
+        saveFileStore(store);
         return sendJSON(res, 200, { success: true, message: "Product deleted successfully" });
       } else {
         const store = getFileStore();
@@ -451,8 +494,9 @@ const server = http.createServer(async (req, res) => {
 
     // GET /api/categories
     if (pathname === "/api/categories" && method === "GET") {
-      if (db) {
-        const cats = await db.collection("categories").find({}, { projection: { _id: 0 } }).toArray();
+      const database = await getDb();
+      if (database) {
+        const cats = await database.collection("categories").find({}, { projection: { _id: 0 } }).toArray();
         return sendJSON(res, 200, { success: true, data: cats });
       } else {
         const store = getFileStore();
@@ -462,8 +506,9 @@ const server = http.createServer(async (req, res) => {
 
     // GET /api/orders (Admin list)
     if (pathname === "/api/orders" && method === "GET") {
-      if (db) {
-        const orders = await db.collection("orders").find({}, { projection: { _id: 0 } }).sort({ date: -1 }).toArray();
+      const database = await getDb();
+      if (database) {
+        const orders = await database.collection("orders").find({}, { projection: { _id: 0 } }).sort({ date: -1 }).toArray();
         return sendJSON(res, 200, { success: true, count: orders.length, data: orders });
       } else {
         const store = getFileStore();
@@ -476,8 +521,9 @@ const server = http.createServer(async (req, res) => {
     const orderMatch = pathname.match(/^\/api\/orders\/([^\/]+)$/);
     if (orderMatch && method === "GET") {
       const id = orderMatch[1].toUpperCase();
-      if (db) {
-        const order = await db.collection("orders").findOne({ id: { $regex: new RegExp(`^${id}$`, "i") } }, { projection: { _id: 0 } });
+      const database = await getDb();
+      if (database) {
+        const order = await database.collection("orders").findOne({ id: { $regex: new RegExp(`^${id}$`, "i") } }, { projection: { _id: 0 } });
         if (!order) return sendJSON(res, 404, { success: false, error: `Order ${id} not found` });
         return sendJSON(res, 200, { success: true, data: order });
       } else {
@@ -503,9 +549,10 @@ const server = http.createServer(async (req, res) => {
         const randNum = Math.floor(1000 + Math.random() * 9000);
         const orderId = `TYP-${randNum}`;
 
-        let shippingFee = 95;
-        if (db) {
-          const s = await db.collection("settings").findOne({ _id: "store_settings" });
+        const database = await getDb();
+        let shippingFee = 70;
+        if (database) {
+          const s = await database.collection("settings").findOne({ _id: "store_settings" });
           if (s && s.shippingFee !== undefined) shippingFee = Number(s.shippingFee);
         } else {
           const store = getFileStore();
@@ -562,25 +609,24 @@ const server = http.createServer(async (req, res) => {
           ]
         };
 
-        if (db) {
-          await db.collection("orders").insertOne({ ...newOrder });
+        if (database) {
+          await database.collection("orders").insertOne({ ...newOrder });
           for (const item of body.items) {
-            await db.collection("products").updateOne(
+            await database.collection("products").updateOne(
               { id: item.id },
               { $inc: { stock: -(Number(item.quantity) || 1) } }
             );
           }
-        } else {
-          const store = getFileStore();
-          body.items.forEach(item => {
-            const product = store.products.find(p => p.id === item.id);
-            if (product && product.stock !== undefined) {
-              product.stock = Math.max(0, product.stock - (item.quantity || 1));
-            }
-          });
-          store.orders.unshift(newOrder);
-          saveFileStore(store);
         }
+        const store = getFileStore();
+        body.items.forEach(item => {
+          const product = store.products.find(p => p.id === item.id);
+          if (product && product.stock !== undefined) {
+            product.stock = Math.max(0, product.stock - (item.quantity || 1));
+          }
+        });
+        store.orders.unshift(newOrder);
+        saveFileStore(store);
 
         return sendJSON(res, 201, { success: true, data: newOrder });
       } catch (err) {
@@ -614,8 +660,9 @@ const server = http.createServer(async (req, res) => {
           desc: body.desc || descMap[body.status]
         };
 
-        if (db) {
-          const r = await db.collection("orders").updateOne(
+        const database = await getDb();
+        if (database) {
+          const r = await database.collection("orders").updateOne(
             { id: { $regex: new RegExp(`^${id}$`, "i") } },
             {
               $set: { status: body.status },
@@ -623,7 +670,14 @@ const server = http.createServer(async (req, res) => {
             }
           );
           if (r.matchedCount === 0) return sendJSON(res, 404, { success: false, error: "Order not found" });
-          const updated = await db.collection("orders").findOne({ id: { $regex: new RegExp(`^${id}$`, "i") } }, { projection: { _id: 0 } });
+          const updated = await database.collection("orders").findOne({ id: { $regex: new RegExp(`^${id}$`, "i") } }, { projection: { _id: 0 } });
+          const store = getFileStore();
+          const order = store.orders.find(o => o.id.toUpperCase() === id);
+          if (order) {
+            order.status = body.status;
+            order.statusHistory.push(statusEntry);
+            saveFileStore(store);
+          }
           return sendJSON(res, 200, { success: true, data: updated });
         } else {
           const store = getFileStore();
@@ -643,9 +697,10 @@ const server = http.createServer(async (req, res) => {
     if (pathname === "/api/stats" && method === "GET") {
       let orders = [];
       let products = [];
-      if (db) {
-        orders = await db.collection("orders").find({}, { projection: { total: 1, status: 1, id: 1, customer: 1, date: 1 } }).toArray();
-        products = await db.collection("products").find({}, { projection: { stock: 1 } }).toArray();
+      const database = await getDb();
+      if (database) {
+        orders = await database.collection("orders").find({}, { projection: { total: 1, status: 1, id: 1, customer: 1, date: 1 } }).toArray();
+        products = await database.collection("products").find({}, { projection: { stock: 1 } }).toArray();
       } else {
         const store = getFileStore();
         orders = store.orders || [];
@@ -674,9 +729,10 @@ const server = http.createServer(async (req, res) => {
 
     // GET & PUT /api/settings
     if (pathname === "/api/settings") {
+      const database = await getDb();
       if (method === "GET") {
-        if (db) {
-          const s = await db.collection("settings").findOne({ _id: "store_settings" });
+        if (database) {
+          const s = await database.collection("settings").findOne({ _id: "store_settings" });
           return sendJSON(res, 200, { success: true, data: s || {} });
         } else {
           const store = getFileStore();
@@ -686,13 +742,16 @@ const server = http.createServer(async (req, res) => {
       if (method === "PUT") {
         const body = await parseBody(req);
         delete body._id;
-        if (db) {
-          await db.collection("settings").updateOne(
+        if (database) {
+          await database.collection("settings").updateOne(
             { _id: "store_settings" },
             { $set: body },
             { upsert: true }
           );
-          const updated = await db.collection("settings").findOne({ _id: "store_settings" });
+          const updated = await database.collection("settings").findOne({ _id: "store_settings" });
+          const store = getFileStore();
+          store.settings = { ...store.settings, ...body };
+          saveFileStore(store);
           return sendJSON(res, 200, { success: true, data: updated });
         } else {
           const store = getFileStore();
@@ -726,24 +785,40 @@ const server = http.createServer(async (req, res) => {
   fs.stat(filePath, async (err, stats) => {
     if (err || !stats.isFile()) {
 
-      // If an uploaded image isn't found on disk, try recovering it from MongoDB uploads collection!
+      // If an uploaded image isn't found on disk, try recovering it from assets or MongoDB!
       const uploadMatch = pathname.match(/^\/assets\/(uploads|receipts)\/([^\/]+)$/);
-      if (uploadMatch && db) {
-        try {
-          const filename = uploadMatch[2];
-          const doc = await db.collection("uploads").findOne({ _id: filename });
-          if (doc && doc.base64) {
-            const matches = doc.base64.match(/^data:([A-Za-z0-9\-+\/]+);base64,(.+)$/);
-            const mime = doc.mimeType || (matches ? matches[1] : "image/jpeg");
-            const buf = Buffer.from(matches ? matches[2] : doc.base64, "base64");
-            res.writeHead(200, {
-              "Content-Type": mime,
-              "Cache-Control": "public, max-age=86400"
-            });
-            return res.end(buf);
+      if (uploadMatch) {
+        const filename = uploadMatch[2];
+        const directAsset = path.join(PUBLIC_DIR, "assets", filename);
+        if (fs.existsSync(directAsset)) {
+          const ext = path.extname(filename).toLowerCase();
+          const mime = MIME_TYPES[ext] || "image/jpeg";
+          res.writeHead(200, {
+            "Content-Type": mime,
+            "Cache-Control": "public, max-age=86400"
+          });
+          return fs.createReadStream(directAsset).pipe(res);
+        }
+
+        const database = await getDb();
+        if (database) {
+          try {
+            const filename = uploadMatch[2];
+            const doc = await database.collection("uploads").findOne({ _id: filename });
+            if (doc && doc.base64) {
+              const matches = doc.base64.match(/^data:([A-Za-z0-9\-+\/]+);base64,(.+)$/);
+              const mime = doc.mimeType || (matches ? matches[1] : "image/jpeg");
+              const buf = Buffer.from(matches ? matches[2] : doc.base64, "base64");
+              try { fs.writeFileSync(filePath, buf); } catch (e) {}
+              res.writeHead(200, {
+                "Content-Type": mime,
+                "Cache-Control": "public, max-age=86400"
+              });
+              return res.end(buf);
+            }
+          } catch (e) {
+            console.error("MongoDB image recovery error:", e.message);
           }
-        } catch (e) {
-          console.error("MongoDB image recovery error:", e.message);
         }
       }
 
