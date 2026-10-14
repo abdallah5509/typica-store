@@ -20,26 +20,42 @@ const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://abdallahbody967_db
 
 let mongoClient = null;
 let db = null;
+let isConnecting = false;
 
-async function initMongoDB() {
-  if (!MongoClient || !MONGODB_URI) return;
+async function getDb() {
+  if (db) return db;
+  if (!MongoClient || !MONGODB_URI) return null;
+  if (isConnecting) {
+    for (let i = 0; i < 25; i++) {
+      if (db) return db;
+      await new Promise(r => setTimeout(r, 200));
+    }
+  }
+  isConnecting = true;
   try {
-    console.log("Connecting to MongoDB Atlas...");
-    mongoClient = new MongoClient(MONGODB_URI, {
-      serverSelectionTimeoutMS: 8000,
-      connectTimeoutMS: 10000
-    });
+    if (!mongoClient) {
+      mongoClient = new MongoClient(MONGODB_URI, {
+        serverSelectionTimeoutMS: 15000,
+        connectTimeoutMS: 15000,
+        maxPoolSize: 10,
+        minPoolSize: 1
+      });
+    }
     await mongoClient.connect();
     db = mongoClient.db("typica");
     console.log("✅ Successfully connected to MongoDB Atlas!");
-
-    // Seed database if empty from store.json
-    await seedMongoIfEmpty();
+    return db;
   } catch (err) {
     console.error("⚠️ MongoDB connection error:", err.message);
-    console.log("Using JSON file fallback until MongoDB reconnects.");
     db = null;
+    return null;
+  } finally {
+    isConnecting = false;
   }
+}
+
+async function initMongoDB() {
+  return await getDb();
 }
 
 async function seedMongoIfEmpty() {
@@ -182,6 +198,7 @@ const server = http.createServer(async (req, res) => {
 
   // --- API ROUTES ---
   if (pathname.startsWith("/api/")) {
+    await getDb();
 
     // POST /api/admin/login
     if (pathname === "/api/admin/login" && method === "POST") {
@@ -296,7 +313,8 @@ const server = http.createServer(async (req, res) => {
         const category = parsedUrl.query.category;
         const search = parsedUrl.query.search;
 
-        if (db) {
+        const database = await getDb();
+        if (database) {
           const query = {};
           if (category && category !== "all") {
             query.$or = [{ category: category }, { collection: category }];
@@ -308,7 +326,7 @@ const server = http.createServer(async (req, res) => {
               { notes: { $elemMatch: { $regex: search, $options: "i" } } }
             ];
           }
-          results = await db.collection("products").find(query, { projection: { _id: 0 } }).toArray();
+          results = await database.collection("products").find(query, { projection: { _id: 0 } }).toArray();
         } else {
           const store = getFileStore();
           results = store.products;
@@ -371,8 +389,9 @@ const server = http.createServer(async (req, res) => {
           cuppingScore: Number(body.cuppingScore) || 87.0
         };
 
-        if (db) {
-          await db.collection("products").insertOne({ ...newProduct });
+        const database = await getDb();
+        if (database) {
+          await database.collection("products").insertOne({ ...newProduct });
         } else {
           const store = getFileStore();
           store.products.push(newProduct);
@@ -391,10 +410,11 @@ const server = http.createServer(async (req, res) => {
         const body = await parseBody(req);
         delete body._id;
 
-        if (db) {
-          const r = await db.collection("products").updateOne({ id }, { $set: body });
+        const database = await getDb();
+        if (database) {
+          const r = await database.collection("products").updateOne({ id }, { $set: body });
           if (r.matchedCount === 0) return sendJSON(res, 404, { success: false, error: "Product not found" });
-          const updated = await db.collection("products").findOne({ id }, { projection: { _id: 0 } });
+          const updated = await database.collection("products").findOne({ id }, { projection: { _id: 0 } });
           return sendJSON(res, 200, { success: true, data: updated });
         } else {
           const store = getFileStore();
@@ -412,8 +432,9 @@ const server = http.createServer(async (req, res) => {
     // DELETE /api/products/:id
     if (productMatch && method === "DELETE") {
       const id = productMatch[1];
-      if (db) {
-        const r = await db.collection("products").deleteOne({ id });
+      const database = await getDb();
+      if (database) {
+        const r = await database.collection("products").deleteOne({ id });
         if (r.deletedCount === 0) return sendJSON(res, 404, { success: false, error: "Product not found" });
         return sendJSON(res, 200, { success: true, message: "Product deleted successfully" });
       } else {
