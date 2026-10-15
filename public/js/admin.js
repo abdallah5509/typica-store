@@ -242,6 +242,8 @@ function renderAdminOrders() {
         blendBadge = `<span style="background: #fef2f2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-weight: 700; font-size: 0.75rem;">🫘 حصى</span>`;
       } else if (i.blendType === 'مطحون') {
         blendBadge = `<span style="background: #ecfdf5; color: #065f46; padding: 1px 6px; border-radius: 3px; font-weight: 700; font-size: 0.75rem;">☕ مطحون</span>`;
+      } else if (i.blendType === 'بندق') {
+        blendBadge = `<span style="background: #fdf2f8; color: #9d174d; padding: 1px 6px; border-radius: 3px; font-weight: 700; font-size: 0.75rem;">🌰 بن بندق</span>`;
       } else {
         blendBadge = `<span style="background: #e0e7ff; color: #3730a3; padding: 1px 6px; border-radius: 3px; font-weight: 700; font-size: 0.75rem;">☕ سادة</span>`;
       }

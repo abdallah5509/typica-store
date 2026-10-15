@@ -230,14 +230,31 @@ function isEspressoProduct(product) {
   return cat === 'espresso' || id.includes('espresso') || name.includes('إسبريسو') || name.includes('اسبريسو');
 }
 
+function isHazelnutProduct(product) {
+  if (!product) return false;
+  const id = (product.id || '').toLowerCase();
+  const name = (product.name || '').toLowerCase();
+  return id.includes('hazelnut') || id.includes('bunduq') || name.includes('بندق');
+}
+
 // Quick Add to Cart
 function quickAddToCart(productId) {
   const product = state.products.find(p => p.id === productId);
   if (!product) return;
 
   const isEspresso = isEspressoProduct(product);
-  const blend = isEspresso ? 'حصى' : 'سادة';
-  const grind = isEspresso ? 'حبوب كاملة (حصى)' : 'Whole Bean';
+  const isHazelnut = isHazelnutProduct(product);
+
+  let blend = 'سادة';
+  let grind = 'Turkish Fine';
+
+  if (isEspresso) {
+    blend = 'حصى';
+    grind = 'حبوب كاملة (حصى)';
+  } else if (isHazelnut) {
+    blend = 'بندق';
+    grind = 'بن تركي ناعم';
+  }
 
   addToCart({
     id: product.id,
@@ -250,7 +267,8 @@ function quickAddToCart(productId) {
     quantity: 1
   });
 
-  showToast(`تمت إضافة "${product.name}" (${blend}) إلى السلة`);
+  const toastLabel = isHazelnut ? '' : ` (${blend})`;
+  showToast(`تمت إضافة "${product.name}"${toastLabel} إلى السلة`);
 }
 
 // Add To Cart with options
@@ -331,8 +349,8 @@ function updateCartUI() {
       <div class="cart-item-details">
         <div class="cart-item-title">${item.name}</div>
         <div class="cart-item-meta">
-          <span style="background: var(--copper-light); color: var(--copper); padding: 2px 7px; border-radius: 4px; font-weight: 600; font-size: 0.75rem;">${item.blendType || 'سادة'}</span>
-          · ${item.weight} · ${item.grind}
+          ${item.blendType && item.blendType !== 'بندق' ? `<span style="background: var(--copper-light); color: var(--copper); padding: 2px 7px; border-radius: 4px; font-weight: 600; font-size: 0.75rem;">${item.blendType}</span> · ` : ''}
+          ${item.weight} · ${item.grind}
         </div>
         <div class="cart-item-bottom">
           <div class="cart-qty-ctrl">
@@ -384,11 +402,12 @@ function openProductModal(productId) {
   if (!product) return;
 
   const isEspresso = isEspressoProduct(product);
+  const isHazelnut = isHazelnutProduct(product);
   state.currentProduct = product;
   state.activeWeight = '250g (ربع كيلو)';
   state.activeWeightMultiplier = 1;
   state.activeGrind = isEspresso ? 'حبوب كاملة (حصى)' : 'Turkish Fine';
-  state.activeBlendType = isEspresso ? 'حصى' : 'سادة';
+  state.activeBlendType = isEspresso ? 'حصى' : (isHazelnut ? 'بندق' : 'سادة');
 
   const modalBody = document.getElementById('product-modal-content');
   if (!modalBody) return;
@@ -436,29 +455,31 @@ function openProductModal(productId) {
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">${notesHtml}</div>
         </div>
 
-        <!-- Blend Type / Bean State Selection -->
-        <div style="margin-bottom: 20px;">
-          <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 8px; font-weight: 600;">
-            ${isEspresso ? 'حالة البن (حصى / مطحون)' : 'نوع البن (التحويجة)'}
-          </label>
-          <div style="display: flex; gap: 10px;" id="blend-type-selector">
-            ${isEspresso ? `
-              <button type="button" class="filter-tab active" onclick="selectBlendType('حصى', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
-                <span>🫘</span> <span>حصى (حبوب كاملة)</span>
-              </button>
-              <button type="button" class="filter-tab" onclick="selectBlendType('مطحون', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
-                <span>☕</span> <span>مطحون (إسبريسو)</span>
-              </button>
-            ` : `
-              <button type="button" class="filter-tab active" onclick="selectBlendType('سادة', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
-                <span>☕</span> <span>سادة</span>
-              </button>
-              <button type="button" class="filter-tab" onclick="selectBlendType('محوّج', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
-                <span>🌿</span> <span>محوّج (+20 ج.م)</span>
-              </button>
-            `}
+        <!-- Blend Type / Bean State Selection (Hidden for Hazelnut, tailored for Espresso) -->
+        ${!isHazelnut ? `
+          <div style="margin-bottom: 20px;">
+            <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 8px; font-weight: 600;">
+              ${isEspresso ? 'حالة البن (حصى / مطحون)' : 'نوع البن (التحويجة)'}
+            </label>
+            <div style="display: flex; gap: 10px;" id="blend-type-selector">
+              ${isEspresso ? `
+                <button type="button" class="filter-tab active" onclick="selectBlendType('حصى', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                  <span>🫘</span> <span>حصى (حبوب كاملة)</span>
+                </button>
+                <button type="button" class="filter-tab" onclick="selectBlendType('مطحون', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                  <span>☕</span> <span>مطحون (إسبريسو)</span>
+                </button>
+              ` : `
+                <button type="button" class="filter-tab active" onclick="selectBlendType('سادة', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                  <span>☕</span> <span>سادة</span>
+                </button>
+                <button type="button" class="filter-tab" onclick="selectBlendType('محوّج', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                  <span>🌿</span> <span>محوّج (+20 ج.م)</span>
+                </button>
+              `}
+            </div>
           </div>
-        </div>
+        ` : ''}
 
         <!-- Weight Selection -->
         <div style="margin-bottom: 20px;">
@@ -508,9 +529,10 @@ function openProductModal(productId) {
 function updateModalPrice() {
   if (!state.currentProduct) return;
   const isEspresso = isEspressoProduct(state.currentProduct);
+  const isHazelnut = isHazelnutProduct(state.currentProduct);
   const multiplier = state.activeWeightMultiplier || 1;
   const basePrice = Math.round(state.currentProduct.price * multiplier);
-  const blendExtra = (!isEspresso && state.activeBlendType === 'محوّج') ? 20 : 0;
+  const blendExtra = (!isEspresso && !isHazelnut && state.activeBlendType === 'محوّج') ? 20 : 0;
   const finalPrice = basePrice + blendExtra;
   const priceEl = document.getElementById('modal-price');
   if (priceEl) {
@@ -537,15 +559,16 @@ function addCurrentProductToCart(buyNow = false) {
   if (!state.currentProduct) return;
 
   const isEspresso = isEspressoProduct(state.currentProduct);
+  const isHazelnut = isHazelnutProduct(state.currentProduct);
   const grindSelect = document.getElementById('grind-select');
-  let grind = grindSelect ? grindSelect.value : 'Whole Bean';
+  let grind = grindSelect ? grindSelect.value : 'Turkish Fine';
   if (isEspresso) {
     grind = state.activeBlendType === 'حصى' ? 'حبوب كاملة (حصى)' : 'مطحون إسبريسو';
   }
 
   const priceText = document.getElementById('modal-price').innerText.replace(/[^\d.]/g, '');
   const price = Number(priceText) || state.currentProduct.price;
-  const blend = state.activeBlendType || (isEspresso ? 'حصى' : 'سادة');
+  const blend = state.activeBlendType || (isEspresso ? 'حصى' : (isHazelnut ? 'بندق' : 'سادة'));
 
   addToCart({
     id: state.currentProduct.id,
@@ -565,7 +588,8 @@ function addCurrentProductToCart(buyNow = false) {
       openCheckoutModal();
     }, 150);
   } else {
-    showToast(`تمت إضافة ${state.currentProduct.name} (${blend} · ${state.activeWeight}) إلى سلتك`);
+    const label = isHazelnut ? ` (${state.activeWeight})` : ` (${blend} · ${state.activeWeight})`;
+    showToast(`تمت إضافة ${state.currentProduct.name}${label} إلى سلتك`);
   }
 }
 
@@ -1000,7 +1024,7 @@ async function fetchOrderTracking(orderId) {
 
     let itemsHtml = (order.items || []).map(i => `
       <div style="display: flex; justify-content: space-between; font-size: 0.875rem; padding: 8px 0; border-bottom: 1px solid var(--cream);">
-        <span>${i.name} (${i.blendType ? `<span style="background: var(--copper-light); color: var(--copper); padding: 1px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">${i.blendType}</span> · ` : ''}${i.weight || '250g'} · ${i.grind || 'Whole Bean'}) × ${i.quantity}</span>
+        <span>${i.name} (${i.blendType && i.blendType !== 'بندق' ? `<span style="background: var(--copper-light); color: var(--copper); padding: 1px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">${i.blendType}</span> · ` : ''}${i.weight || '250g'}${i.grind ? ` · ${i.grind}` : ''}) × ${i.quantity}</span>
         <strong>${(i.price * i.quantity).toFixed(2)} ج.م</strong>
       </div>
     `).join('');
