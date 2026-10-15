@@ -442,9 +442,9 @@ function openProductModal(productId) {
         <div style="margin-bottom: 20px;">
           <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 8px;">حجم العبوة (Weight)</label>
           <div style="display: flex; gap: 10px;" id="weight-selector">
-            <button class="filter-tab active" onclick="selectWeight('250g', 1, this)">250g</button>
-            <button class="filter-tab" onclick="selectWeight('500g', 1.9, this)">500g (وفر 5%)</button>
-            <button class="filter-tab" onclick="selectWeight('1kg', 3.6, this)">1kg (وفر 10%)</button>
+            <button class="filter-tab active" onclick="selectWeight('250g (ربع كيلو)', 1, this)">250g (ربع كيلو)</button>
+            <button class="filter-tab" onclick="selectWeight('500g (نصف كيلو)', 2, this)">500g (نصف كيلو)</button>
+            <button class="filter-tab" onclick="selectWeight('1kg (كيلو كامل)', 4, this)">1kg (كيلو كامل)</button>
           </div>
         </div>
 
