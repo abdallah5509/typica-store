@@ -192,7 +192,7 @@
         "قوام ناعم",
         "85% أرابيكا"
       ],
-      "image": "/assets/typica-hazelnut.jpg",
+      "image": "/assets/uploads/typica-hazelnut.jpg",
       "badge": "بندق",
       "stock": 50,
       "description": "قهوة تركية فاخرة 85% أرابيكا غنية برائحة ونكهة البندق المحمص الفاخر لمذاق استثنائي ممتع.",
@@ -214,7 +214,7 @@
         "كريمة غنية",
         "مذاق قوي"
       ],
-      "image": "/assets/typica-espresso.jpg",
+      "image": "/assets/uploads/typica-espresso.jpg",
       "badge": "100% أرابيكا",
       "stock": 50,
       "description": "إسبريسو مختص فاخر 100% أرابيكا بنكهة مركزة وكريمة ذهبية غنية تمنحك طاقة ومذاق لا يُنسى.",
@@ -236,7 +236,7 @@
         "تحميص وسط",
         "نعومة فائقة"
       ],
-      "image": "/assets/typica-medium-100.jpg",
+      "image": "/assets/uploads/typica-medium-100.jpg",
       "badge": "100% أرابيكا",
       "stock": 50,
       "description": "قهوة تركية فاخرة مختصة من حبوب 100% أرابيكا الصافية بتحميص وسط متوازن وأعلى درجات النقاء.",
