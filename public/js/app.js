@@ -222,23 +222,35 @@ function renderProducts() {
   });
 }
 
+function isEspressoProduct(product) {
+  if (!product) return false;
+  const id = (product.id || '').toLowerCase();
+  const name = (product.name || '').toLowerCase();
+  const cat = (product.category || '').toLowerCase();
+  return cat === 'espresso' || id.includes('espresso') || name.includes('إسبريسو') || name.includes('اسبريسو');
+}
+
 // Quick Add to Cart
 function quickAddToCart(productId) {
   const product = state.products.find(p => p.id === productId);
   if (!product) return;
+
+  const isEspresso = isEspressoProduct(product);
+  const blend = isEspresso ? 'حصى' : 'سادة';
+  const grind = isEspresso ? 'حبوب كاملة (حصى)' : 'Whole Bean';
 
   addToCart({
     id: product.id,
     name: product.name,
     price: product.price,
     image: product.image,
-    weight: '250g',
-    grind: 'Whole Bean',
-    blendType: 'سادة',
+    weight: '250g (ربع كيلو)',
+    grind: grind,
+    blendType: blend,
     quantity: 1
   });
 
-  showToast(`تمت إضافة "${product.name}" (سادة) إلى السلة`);
+  showToast(`تمت إضافة "${product.name}" (${blend}) إلى السلة`);
 }
 
 // Add To Cart with options
@@ -371,11 +383,12 @@ function openProductModal(productId) {
   const product = state.products.find(p => p.id === productId);
   if (!product) return;
 
+  const isEspresso = isEspressoProduct(product);
   state.currentProduct = product;
-  state.activeWeight = '250g';
+  state.activeWeight = '250g (ربع كيلو)';
   state.activeWeightMultiplier = 1;
-  state.activeGrind = 'Whole Bean';
-  state.activeBlendType = 'سادة';
+  state.activeGrind = isEspresso ? 'حبوب كاملة (حصى)' : 'Turkish Fine';
+  state.activeBlendType = isEspresso ? 'حصى' : 'سادة';
 
   const modalBody = document.getElementById('product-modal-content');
   if (!modalBody) return;
@@ -423,18 +436,27 @@ function openProductModal(productId) {
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">${notesHtml}</div>
         </div>
 
-        <!-- Blend Type Selection (سادة / محوّج) -->
+        <!-- Blend Type / Bean State Selection -->
         <div style="margin-bottom: 20px;">
           <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 8px; font-weight: 600;">
-            نوع البن (التحويجة)
+            ${isEspresso ? 'حالة البن (حصى / مطحون)' : 'نوع البن (التحويجة)'}
           </label>
           <div style="display: flex; gap: 10px;" id="blend-type-selector">
-            <button type="button" class="filter-tab active" onclick="selectBlendType('سادة', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
-              <span>☕</span> <span>سادة</span>
-            </button>
-            <button type="button" class="filter-tab" onclick="selectBlendType('محوّج', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
-              <span>🌿</span> <span>محوّج (+20 ج.م)</span>
-            </button>
+            ${isEspresso ? `
+              <button type="button" class="filter-tab active" onclick="selectBlendType('حصى', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                <span>🫘</span> <span>حصى (حبوب كاملة)</span>
+              </button>
+              <button type="button" class="filter-tab" onclick="selectBlendType('مطحون', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                <span>☕</span> <span>مطحون (إسبريسو)</span>
+              </button>
+            ` : `
+              <button type="button" class="filter-tab active" onclick="selectBlendType('سادة', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                <span>☕</span> <span>سادة</span>
+              </button>
+              <button type="button" class="filter-tab" onclick="selectBlendType('محوّج', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                <span>🌿</span> <span>محوّج (+20 ج.م)</span>
+              </button>
+            `}
           </div>
         </div>
 
@@ -449,12 +471,12 @@ function openProductModal(productId) {
         </div>
 
         <!-- Grind Selection -->
-        <div style="margin-bottom: 24px;">
+        <div style="margin-bottom: 24px; ${isEspresso ? 'display: none;' : ''}">
           <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 8px;">درجة الطحن (Grind Profile)</label>
           <select id="grind-select" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-family: var(--font-sans); background: #fff;">
-            <option value="Whole Bean">حبوب كاملة (Whole Bean - للحفاظ على أقصى درجات الطزاجة)</option>
-            <option value="Pour Over / V60">فلتر / تقطير (V60, Chemex, Kalita)</option>
-            <option value="Espresso">إسبريسو ناعم (Fine Espresso)</option>
+            <option value="Turkish Fine" selected>بن تركي ناعم (طحن تركي أصيل)</option>
+            <option value="Whole Bean">حبوب كاملة (Whole Bean)</option>
+            <option value="Pour Over / V60">فلتر / تقطير (V60, Chemex)</option>
             <option value="French Press">فرنش بريس / كولد برو (Coarse)</option>
             <option value="Aeropress">ايروبرس / موكا بوت (Medium Fine)</option>
           </select>
@@ -485,9 +507,10 @@ function openProductModal(productId) {
 
 function updateModalPrice() {
   if (!state.currentProduct) return;
+  const isEspresso = isEspressoProduct(state.currentProduct);
   const multiplier = state.activeWeightMultiplier || 1;
   const basePrice = Math.round(state.currentProduct.price * multiplier);
-  const blendExtra = state.activeBlendType === 'محوّج' ? 20 : 0;
+  const blendExtra = (!isEspresso && state.activeBlendType === 'محوّج') ? 20 : 0;
   const finalPrice = basePrice + blendExtra;
   const priceEl = document.getElementById('modal-price');
   if (priceEl) {
@@ -513,10 +536,16 @@ function selectWeight(weight, multiplier, btn) {
 function addCurrentProductToCart(buyNow = false) {
   if (!state.currentProduct) return;
 
-  const grind = document.getElementById('grind-select').value;
+  const isEspresso = isEspressoProduct(state.currentProduct);
+  const grindSelect = document.getElementById('grind-select');
+  let grind = grindSelect ? grindSelect.value : 'Whole Bean';
+  if (isEspresso) {
+    grind = state.activeBlendType === 'حصى' ? 'حبوب كاملة (حصى)' : 'مطحون إسبريسو';
+  }
+
   const priceText = document.getElementById('modal-price').innerText.replace(/[^\d.]/g, '');
   const price = Number(priceText) || state.currentProduct.price;
-  const blend = state.activeBlendType || 'سادة';
+  const blend = state.activeBlendType || (isEspresso ? 'حصى' : 'سادة');
 
   addToCart({
     id: state.currentProduct.id,

@@ -235,9 +235,16 @@ function renderAdminOrders() {
 
   tbody.innerHTML = adminState.orders.map(order => {
     const itemsSummary = (order.items || []).map(i => {
-      const blendBadge = i.blendType === 'محوّج' 
-        ? `<span style="background: #fef3c7; color: #b45309; padding: 1px 6px; border-radius: 3px; font-weight: 700; font-size: 0.75rem;">🌿 محوّج</span>`
-        : `<span style="background: #e0e7ff; color: #3730a3; padding: 1px 6px; border-radius: 3px; font-weight: 700; font-size: 0.75rem;">☕ سادة</span>`;
+      let blendBadge = '';
+      if (i.blendType === 'محوّج') {
+        blendBadge = `<span style="background: #fef3c7; color: #b45309; padding: 1px 6px; border-radius: 3px; font-weight: 700; font-size: 0.75rem;">🌿 محوّج</span>`;
+      } else if (i.blendType === 'حصى') {
+        blendBadge = `<span style="background: #fef2f2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-weight: 700; font-size: 0.75rem;">🫘 حصى</span>`;
+      } else if (i.blendType === 'مطحون') {
+        blendBadge = `<span style="background: #ecfdf5; color: #065f46; padding: 1px 6px; border-radius: 3px; font-weight: 700; font-size: 0.75rem;">☕ مطحون</span>`;
+      } else {
+        blendBadge = `<span style="background: #e0e7ff; color: #3730a3; padding: 1px 6px; border-radius: 3px; font-weight: 700; font-size: 0.75rem;">☕ سادة</span>`;
+      }
       const weightTxt = i.weight ? `<span style="color: var(--text-muted); font-size: 0.75rem;">(${i.weight})</span>` : '';
       return `<div style="margin-bottom: 4px;"><strong>${i.name}</strong> ${blendBadge} ${weightTxt} × <strong>${i.quantity}</strong></div>`;
     }).join('');
