@@ -253,14 +253,14 @@ function renderAdminOrders() {
           💵 دفع عند الاستلام بالكامل (COD)
         </div>
         <div style="font-weight: 700; color: var(--espresso); font-size: 0.8125rem; background: var(--cream); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px;">
-          المطلوب تحصيله: ${(order.total || (order.subtotal + 95)).toFixed(2)} ج.م
+          المطلوب تحصيله: ${(order.total || (order.subtotal + (order.shippingFee || 70))).toFixed(2)} ج.م
         </div>
       `;
     } else {
       const methodLabel = order.paymentMethod === 'instapay' ? 'إنستاباي' : 'المحفظة';
       paymentBadge = `
         <div style="color: #059669; font-weight: 600; font-size: 0.8125rem;">
-          ✓ مسدد شحن: 95 ج.م (${methodLabel})
+          ✓ مسدد شحن: ${order.shippingDeposit !== undefined ? order.shippingDeposit : 70} ج.م (${methodLabel})
         </div>
         <div style="font-size: 0.75rem; color: var(--text-muted); margin: 2px 0;">
           رقم المحول: <strong>${order.senderNumber || 'غير مسجل'}</strong>

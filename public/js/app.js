@@ -299,7 +299,7 @@ function updateCartUI() {
       </div>
     `;
     if (cartSubtotalEl) cartSubtotalEl.innerText = '0.00 ج.م';
-    if (cartShippingEl) cartShippingEl.innerText = '95.00 ج.م';
+    if (cartShippingEl) cartShippingEl.innerText = '70.00 ج.م';
     if (cartTotalEl) cartTotalEl.innerText = '0.00 ج.م';
     if (freeShippingBar) freeShippingBar.style.width = '0%';
     if (freeShippingText) freeShippingText.innerText = 'شحن وتوصيل سريع متاح لجميع محافظات مصر.';
@@ -338,7 +338,7 @@ function updateCartUI() {
     cartItemsContainer.appendChild(row);
   });
 
-  const shippingFee = Number(state.settings.shippingFee) || 95;
+  const shippingFee = Number(state.settings.shippingFee) || 70;
   const discount = (subtotal * state.discountPercent) / 100;
   const grandTotal = Math.max(0, subtotal - discount);
 
@@ -349,7 +349,7 @@ function updateCartUI() {
   // Shipping note
   if (freeShippingBar && freeShippingText) {
     freeShippingBar.style.width = '100%';
-    freeShippingText.innerHTML = `🚚 <strong>رسوم الشحن 95 ج.م</strong> تُدفع مسبقاً عبر إنستاباي/المحفظة، أو اختر الدفع عند الاستلام بالكامل!`;
+    freeShippingText.innerHTML = `🚚 <strong>رسوم الشحن ${shippingFee} ج.م</strong> تُدفع مسبقاً عبر إنستاباي/المحفظة، أو اختر الدفع عند الاستلام بالكامل!`;
   }
 }
 
@@ -574,7 +574,7 @@ function selectPaymentMethod(method) {
   };
 
   const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shippingFee = Number(state.settings.shippingFee) || 95;
+  const shippingFee = Number(state.settings.shippingFee) || 70;
   const grandTotal = subtotal + shippingFee;
 
   // Toggle active classes
@@ -611,11 +611,11 @@ function selectPaymentMethod(method) {
     if (method === 'instapay') {
       if (labelEl) labelEl.innerText = 'حساب إنستاباي للتحويل (اضغط نسخ ثم حوّل من تطبيق إنستاباي أو بنكك):';
       if (valEl) valEl.innerText = paySettings.instapayId || 'typica@instapay';
-      if (nameEl) nameEl.innerText = '* قم بتحويل 95 ج.م لحساب: ' + (paySettings.instapayName || 'حساب إنستاباي الرسمي') + ' وارفع الاسكرين شوت بالأسفل.';
+      if (nameEl) nameEl.innerText = `* قم بتحويل ${shippingFee} ج.م لحساب: ` + (paySettings.instapayName || 'حساب إنستاباي الرسمي') + ' وارفع الاسكرين شوت بالأسفل.';
     } else {
       if (labelEl) labelEl.innerText = 'رقم المحفظة الإلكترونية (فودافون كاش / اتصالات / أورنج / وي):';
       if (valEl) valEl.innerText = paySettings.walletNumber || '01099887766';
-      if (nameEl) nameEl.innerText = '* قم بتحويل 95 ج.م كاش للرقم أعلاه، وارفع اسكرين شوت التحويل بالأسفل.';
+      if (nameEl) nameEl.innerText = `* قم بتحويل ${shippingFee} ج.م كاش للرقم أعلاه، وارفع اسكرين شوت التحويل بالأسفل.`;
     }
   }
 }
@@ -683,7 +683,7 @@ function openCheckoutModal() {
   closeCartDrawer();
 
   const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shippingFee = Number(state.settings.shippingFee) || 95;
+  const shippingFee = Number(state.settings.shippingFee) || 70;
 
   const subtotalEl = document.getElementById('checkout-subtotal');
   const shippingEl = document.getElementById('checkout-shipping');
@@ -789,7 +789,7 @@ async function handlePlaceOrder(e) {
         paymentMethod: state.selectedPaymentMethod || 'instapay',
         senderNumber: isCod ? '' : senderNumber,
         receiptImage: receiptUrl,
-        shippingDeposit: isCod ? 0 : 95
+        shippingDeposit: isCod ? 0 : (Number(state.settings.shippingFee) || 70)
       })
     });
 
@@ -836,7 +836,7 @@ function showOrderConfirmation(order) {
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
           <span>مصاريف الشحن:</span>
-          <span>95.00 ج.م</span>
+          <span>${(order.shippingFee || Number(state.settings.shippingFee) || 70).toFixed(2)} ج.م</span>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 1.15rem; font-weight: 700; color: var(--espresso); border-top: 1px dashed var(--border-color); padding-top: 10px; margin-top: 8px;">
           <span>المطلوب دفعه للمندوب عند الاستلام:</span>
@@ -853,7 +853,7 @@ function showOrderConfirmation(order) {
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
           <span>مصاريف الشحن المحولة:</span>
-          <span style="color: #059669; font-weight: 600;">95.00 ج.م (تم إرفاق الإيصال)</span>
+          <span style="color: #059669; font-weight: 600;">${(order.shippingDeposit || 70).toFixed(2)} ج.م (تم إرفاق الإيصال)</span>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 700; color: var(--espresso); border-top: 1px dashed var(--border-color); padding-top: 10px; margin-top: 8px;">
           <span>المتبقي للدفع نقداً عند الاستلام (COD):</span>
@@ -882,7 +882,7 @@ function showOrderConfirmation(order) {
       <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto 24px auto; line-height: 1.6;">
         ${isCod 
           ? `تم تسجيل طلبك بنجاح برقم <strong>#${order.id}</strong> بنظام الدفع عند الاستلام. سيتم شحن الطلب فوراً لعنوانك في <strong>${govCity}</strong> وسداد كامل القيمة لمندوب الشحن.`
-          : `تم تسجيل طلبك بنجاح برقم <strong>#${order.id}</strong>. سيتم مراجعة تحويل الـ 95 ج.م عبر <strong>${order.paymentMethod === 'instapay' ? 'إنستاباي' : 'المحفظة'}</strong> والبدء فوراً في تجهيز وتحميص شحنتك لعنوانك في <strong>${govCity}</strong>.`
+          : `تم تسجيل طلبك بنجاح برقم <strong>#${order.id}</strong>. سيتم مراجعة تحويل الـ ${(order.shippingDeposit || 70)} ج.م عبر <strong>${order.paymentMethod === 'instapay' ? 'إنستاباي' : 'المحفظة'}</strong> والبدء فوراً في تجهيز وتحميص شحنتك لعنوانك في <strong>${govCity}</strong>.`
         }
       </p>
 

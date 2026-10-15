@@ -88,6 +88,18 @@ header {
   color: var(--espresso);
 }
 
+.logo-image {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.logo:hover .logo-image {
+  transform: scale(1.03);
+}
+
 .logo-symbol {
   width: 32px;
   height: 32px;
@@ -1148,7 +1160,7 @@ footer {
   .footer-container { grid-template-columns: 1fr; }
 }
 
-/* --- Egyptian Checkout & 95 EGP Shipping Deposit Styling --- */
+/* --- Egyptian Checkout & 70 EGP Shipping Deposit Styling --- */
 .deposit-notice-box {
   background: #fff8f0;
   border: 1px solid #fbd38d;

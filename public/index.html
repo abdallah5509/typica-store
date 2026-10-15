@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Typica | Luxury Small-Batch Specialty Coffee Roasters</title>
   <meta name="description" content="Artisan single-origin coffees, espresso blends, and precision brewing gear roasted to order." />
-  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link rel="stylesheet" href="/css/style.css?v=2.8" />
 </head>
 <body>
 
@@ -18,11 +19,7 @@
   <header>
     <div class="nav-container">
       <a href="#" class="logo">
-        <div class="logo-symbol">T</div>
-        <div>
-          <span class="logo-text">Typica</span>
-          <span class="logo-subtitle">Specialty Roasters</span>
-        </div>
+        <img src="/assets/logo.png" alt="Typica Coffee Roasters" class="logo-image" />
       </a>
 
       <ul class="nav-links">
@@ -72,7 +69,7 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>
           قهوة مختارة بعناية · محمّصة لك طازجة
         </div>
-        <h1 class="hero-title" style="direction:rtl;">طعم من <em>خيال</em></h1>
+        <h1 class="hero-title" style="direction:rtl;">قهوة <em>تفوقك</em></h1>
         <p class="hero-desc" style="direction:rtl;">
           قهوة أصيلة من أفضل المزارع، محمّصة أسبوعياً بأعلى معايير الجودة.
         </p>
@@ -211,7 +208,7 @@
               <th>Customer & Phone</th>
               <th>Governorate & City</th>
               <th>Items</th>
-              <th>Deposit Paid (95 EGP) & COD</th>
+              <th>Deposit Paid (70 EGP) & COD</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -265,13 +262,13 @@
             <label style="display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 6px;">
               قيمة مصاريف الشحن المطلوبة مسبقاً (ج.م) *
             </label>
-            <input type="number" id="setting-shipping" required style="width: 100%; padding: 11px; border: 1px solid var(--border-color); border-radius: 4px; font-weight: 600;" value="95" />
-            <span style="font-size: 0.75rem; color: var(--text-muted);">المبلغ الثابت المطلوب سداده الآن لتأكيد الشحن (الافتراضي 95 ج.م)</span>
+            <input type="number" id="setting-shipping" required style="width: 100%; padding: 11px; border: 1px solid var(--border-color); border-radius: 4px; font-weight: 600;" value="70" />
+            <span style="font-size: 0.75rem; color: var(--text-muted);">المبلغ الثابت المطلوب سداده الآن لتأكيد الشحن (الافتراضي 70 ج.م)</span>
           </div>
 
           <div style="margin-bottom: 24px;">
             <label style="display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 6px;">شريط الإعلانات أعلى المتجر</label>
-            <input type="text" id="setting-announcement" style="width: 100%; padding: 11px; border: 1px solid var(--border-color); border-radius: 4px;" value="توصيل لجميع محافظات مصر | دفع 95 ج.م مصاريف الشحن مسبقاً وباقي الطلب عند الاستلام" />
+            <input type="text" id="setting-announcement" style="width: 100%; padding: 11px; border: 1px solid var(--border-color); border-radius: 4px;" value="🎉 توصيل مجاني داخل بلبيس الشرقية 🎉" />
           </div>
 
           <button type="submit" class="btn-primary" style="font-size: 0.9375rem; padding: 12px 28px;">حفظ وتحديث الإعدادات</button>
@@ -294,7 +291,7 @@
 
     <!-- Shipping Bar -->
     <div class="cart-progress">
-      <div id="free-shipping-text">🚚 رسوم الشحن 95 ج.م مسبقاً — المنتجات تُدفع عند الاستلام</div>
+      <div id="free-shipping-text">🚚 رسوم الشحن 70 ج.م مسبقاً — المنتجات تُدفع عند الاستلام</div>
       <div class="progress-bar-wrap">
         <div id="free-shipping-bar" class="progress-bar-fill" style="width: 0%;"></div>
       </div>
@@ -311,7 +308,7 @@
       </div>
       <div class="cart-summary-row">
         <span>مصاريف الشحن:</span>
-        <span id="cart-shipping">95.00 ج.م</span>
+        <span id="cart-shipping">70.00 ج.م</span>
       </div>
       <div class="cart-summary-row total">
         <span>المطلوب للتأكيد:</span>
@@ -342,13 +339,13 @@
         بيانات الشحن وتأكيد الطلب
       </h2>
 
-      <!-- Notice for Upfront Shipping Payment (95 EGP) -->
+      <!-- Notice for Upfront Shipping Payment (70 EGP) -->
       <div class="deposit-notice-box" dir="rtl">
         <div style="font-size: 1.4rem; color: var(--copper); line-height: 1;">⚠️</div>
         <div>
           <div class="deposit-notice-title">نظام تأكيد الشحن لجميع المحافظات</div>
           <div class="deposit-notice-desc">
-            لضمان جدية الاستلام وتجهيز الشحنة فوراً، <strong>يتم تحويل مصاريف الشحن فقط (95 ج.م) مسبقاً</strong> عبر (إنستاباي أو المحفظة الإلكترونية)، <strong>وباقي ثمن المنتجات يُدفع نقداً عند الاستلام</strong> بعد وصول مندوب الشحن ومعاينة طلبك.
+            لضمان جدية الاستلام وتجهيز الشحنة فوراً، <strong>يتم تحويل مصاريف الشحن فقط (70 ج.م) مسبقاً</strong> عبر (إنستاباي أو المحفظة الإلكترونية)، <strong>وباقي ثمن المنتجات يُدفع نقداً عند الاستلام</strong> بعد وصول مندوب الشحن ومعاينة طلبك.
           </div>
         </div>
       </div>
@@ -418,7 +415,7 @@
           <input type="text" id="cust-address" required placeholder="مثال: شارع الجامعة، عمارة 15 الدور الرابع بجوار مسجد..." class="egypt-form-input" />
         </div>
 
-        <!-- Price Breakdown (Highlighting 95 EGP upfront vs COD) -->
+        <!-- Price Breakdown (Highlighting 70 EGP upfront vs COD) -->
         <div class="checkout-split-summary" dir="rtl">
           <div class="split-row">
             <span>إجمالي قيمة المنتجات:</span>
@@ -426,11 +423,11 @@
           </div>
           <div class="split-row">
             <span>مصاريف الشحن والتوصيل السريع:</span>
-            <span id="checkout-shipping" style="font-weight: 600;">95.00 ج.م</span>
+            <span id="checkout-shipping" style="font-weight: 600;">70.00 ج.م</span>
           </div>
           <div class="split-row highlight-paynow">
             <span>المطلوب سداده الآن لتأكيد الشحن:</span>
-            <span id="checkout-deposit-required">95.00 ج.م</span>
+            <span id="checkout-deposit-required">70.00 ج.م</span>
           </div>
           <div class="split-row highlight-cod">
             <span>المتبقي للدفع نقداً عند الاستلام (COD):</span>
@@ -449,7 +446,7 @@
               <input type="radio" name="pay-method" value="instapay" checked class="payment-card-radio" />
               <div>
                 <div style="font-weight: 600; font-size: 0.875rem;">إنستاباي (InstaPay)</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted);">تحويل 95 ج.م شحن مسبقاً</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">تحويل 70 ج.م شحن مسبقاً</div>
               </div>
             </div>
 
@@ -485,7 +482,7 @@
                 </button>
               </div>
               <div id="transfer-name-info" style="font-size: 0.75rem; color: var(--copper); margin-top: 6px; font-weight: 500;">
-                * تأكد من إتمام تحويل الـ 95 ج.م ورفع صورة الإيصال بالأسفل لتأكيد الأوردر فوراً.
+                * تأكد من إتمام تحويل الـ 70 ج.م ورفع صورة الإيصال بالأسفل لتأكيد الأوردر فوراً.
               </div>
             </div>
 
@@ -532,7 +529,7 @@
               <div>
                 <div class="cod-title">الدفع نقداً بالكامل عند الاستلام (COD)</div>
                 <div class="cod-desc">
-                  لا تحتاج إلى أي تحويل مسبق. سيتم تجهيز طلبك فوراً ودفع كامل القيمة (المنتجات + 95 ج.م مصاريف الشحن) لمندوب شركة الشحن عند باب بيتك بعد فحص ومعاينة طلبك.
+                  لا تحتاج إلى أي تحويل مسبق. سيتم تجهيز طلبك فوراً ودفع كامل القيمة (المنتجات + 70 ج.م مصاريف الشحن) لمندوب شركة الشحن عند باب بيتك بعد فحص ومعاينة طلبك.
                 </div>
               </div>
             </div>
@@ -540,7 +537,7 @@
         </div>
 
         <button type="submit" id="btn-place-order" class="btn-primary" style="width: 100%; justify-content: center; font-size: 1rem; padding: 15px;">
-          تأكيد الأوردر وإرسال بيانات الشحن (المطلوب 95 ج.م) ←
+          تأكيد الأوردر وإرسال بيانات الشحن (المطلوب 70 ج.م) ←
         </button>
       </form>
     </div>
@@ -636,12 +633,8 @@
   <footer>
     <div class="footer-container">
       <div class="footer-brand">
-        <a href="#" class="logo" style="color: #fff;">
-          <div class="logo-symbol" style="background: var(--copper); color: #fff;">T</div>
-          <div>
-            <span class="logo-text" style="color: #fff;">Typica</span>
-            <span class="logo-subtitle" style="color: var(--sand);">Specialty Roasters</span>
-          </div>
+        <a href="#" class="logo">
+          <img src="/assets/logo-white.png" alt="Typica Coffee Roasters" class="logo-image" />
         </a>
         <p>
           Dedicated to uncompromised clarity, sweet terroir, and deep direct partnerships with specialty coffee producers worldwide.
@@ -693,7 +686,7 @@
   </div>
 
   <!-- Scripts with cache busting -->
-  <script src="/js/app.js?v=2.7"></script>
-  <script src="/js/admin.js?v=2.7"></script>
+  <script src="/js/app.js?v=2.8"></script>
+  <script src="/js/admin.js?v=2.8"></script>
 </body>
 </html>

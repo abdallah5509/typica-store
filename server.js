@@ -591,7 +591,7 @@ const server = http.createServer(async (req, res) => {
         } else {
           shippingDepositPaid = Number(body.shippingDeposit) || shippingFee;
           codAmount = subtotal;
-          statusDesc = `تم تسجيل الطلب - تم تحويل 95 ج.م مصاريف شحن عبر ${paymentMethod === 'instapay' ? 'إنستاباي' : 'المحفظة الإلكترونية'} (المتبقي عند الاستلام: ${codAmount} ج.م)`;
+          statusDesc = `تم تسجيل الطلب - تم تحويل ${shippingDepositPaid} ج.م مصاريف شحن عبر ${paymentMethod === 'instapay' ? 'إنستاباي' : 'المحفظة الإلكترونية'} (المتبقي عند الاستلام: ${codAmount} ج.م)`;
         }
 
         const newOrder = {
@@ -803,9 +803,9 @@ const server = http.createServer(async (req, res) => {
     if (err || !stats.isFile()) {
 
       // If an uploaded image isn't found on disk, try recovering it from assets or MongoDB!
-      const uploadMatch = pathname.match(/^\/assets\/(uploads|receipts)\/([^\/]+)$/);
+      const uploadMatch = pathname.match(/^\/assets\/(?:(?:uploads|receipts)\/)?([^\/]+)$/);
       if (uploadMatch) {
-        const filename = uploadMatch[2];
+        const filename = uploadMatch[1];
         const directAsset = path.join(PUBLIC_DIR, "assets", filename);
         if (fs.existsSync(directAsset)) {
           const ext = path.extname(filename).toLowerCase();
@@ -820,7 +820,6 @@ const server = http.createServer(async (req, res) => {
         const database = await getDb();
         if (database) {
           try {
-            const filename = uploadMatch[2];
             const doc = await database.collection("uploads").findOne({ _id: filename });
             if (doc && doc.base64) {
               const matches = doc.base64.match(/^data:([A-Za-z0-9\-+\/]+);base64,(.+)$/);
