@@ -1,3 +1,13 @@
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 // Typica Coffee Roasters — Client-Side Application Logic
 
 // State
@@ -474,7 +484,7 @@ function openProductModal(productId) {
                   <span>☕</span> <span>سادة</span>
                 </button>
                 <button type="button" class="filter-tab" onclick="selectBlendType('محوّج', this)" style="flex: 1; padding: 10px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
-                  <span>🌿</span> <span>محوّج (+20 ج.م)</span>
+                  <span>🌿</span> <span id="blend-extra-label">محوّج (+20 ج.م)</span>
                 </button>
               `}
             </div>
@@ -484,7 +494,8 @@ function openProductModal(productId) {
         <!-- Weight Selection -->
         <div style="margin-bottom: 20px;">
           <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 8px;">حجم العبوة (Weight)</label>
-          <div style="display: flex; gap: 10px;" id="weight-selector">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="weight-selector">
+            <button class="filter-tab" onclick="selectWeight('125g (ثمن كيلو)', 0.5, this)">125g (ثمن كيلو)</button>
             <button class="filter-tab active" onclick="selectWeight('250g (ربع كيلو)', 1, this)">250g (ربع كيلو)</button>
             <button class="filter-tab" onclick="selectWeight('500g (نصف كيلو)', 2, this)">500g (نصف كيلو)</button>
             <button class="filter-tab" onclick="selectWeight('1kg (كيلو كامل)', 4, this)">1kg (كيلو كامل)</button>
@@ -530,9 +541,9 @@ function updateModalPrice() {
   if (!state.currentProduct) return;
   const isEspresso = isEspressoProduct(state.currentProduct);
   const isHazelnut = isHazelnutProduct(state.currentProduct);
-  const multiplier = state.activeWeightMultiplier || 1;
+  const multiplier = state.activeWeightMultiplier !== undefined ? state.activeWeightMultiplier : 1;
   const basePrice = Math.round(state.currentProduct.price * multiplier);
-  const blendExtra = (!isEspresso && !isHazelnut && state.activeBlendType === 'محوّج') ? 20 : 0;
+  const blendExtra = (!isEspresso && !isHazelnut && state.activeBlendType === 'محوّج') ? (multiplier === 0.5 ? 10 : 20) : 0;
   const finalPrice = basePrice + blendExtra;
   const priceEl = document.getElementById('modal-price');
   if (priceEl) {
@@ -552,6 +563,11 @@ function selectWeight(weight, multiplier, btn) {
   state.activeWeightMultiplier = multiplier;
   document.querySelectorAll('#weight-selector button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  const blendLabel = document.getElementById('blend-extra-label');
+  if (blendLabel) {
+    const extra = multiplier === 0.5 ? 10 : 20;
+    blendLabel.innerText = `محوّج (+${extra} ج.م)`;
+  }
   updateModalPrice();
 }
 
@@ -770,6 +786,7 @@ async function handlePlaceOrder(e) {
   const governorate = document.getElementById('cust-governorate').value;
   const city = document.getElementById('cust-city').value.trim();
   const address = document.getElementById('cust-address').value.trim();
+  const notes = document.getElementById('cust-notes') ? document.getElementById('cust-notes').value.trim() : '';
   const senderNumber = document.getElementById('cust-sender-number') ? document.getElementById('cust-sender-number').value.trim() : '';
   const errorMsg = document.getElementById('receipt-error-msg');
 
@@ -836,8 +853,10 @@ async function handlePlaceOrder(e) {
           phone2,
           governorate,
           city,
-          address: `${governorate} - ${city} - ${address}`
+          address: `${governorate} - ${city} - ${address}`,
+          notes
         },
+        notes,
         items: state.cart,
         paymentMethod: state.selectedPaymentMethod || 'instapay',
         senderNumber: isCod ? '' : senderNumber,
@@ -940,6 +959,12 @@ function showOrderConfirmation(order) {
       </p>
 
       ${paymentSummaryHtml}
+
+      ${(order.notes || (order.customer && order.customer.notes)) ? `
+        <div style="background: #fffbeb; border: 1px dashed #f59e0b; border-radius: var(--radius-sm); padding: 12px 16px; max-width: 440px; margin: 0 auto 20px auto; font-size: 0.8125rem; color: #92400e; text-align: right;">
+          <strong>📝 ملاحظاتك على الطلب:</strong> ${escapeHtml(order.notes || order.customer.notes)}
+        </div>
+      ` : ''}
 
       <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
         <button class="btn-primary" onclick="closeConfirmModal(); openTrackModal('${order.id}');">
@@ -1053,6 +1078,11 @@ async function fetchOrderTracking(orderId) {
         <div style="margin-top: 16px; font-size: 0.8125rem; color: var(--text-muted);">
           <strong>عنوان التوصيل:</strong> ${order.customer.address} (${order.customer.name} - 📞 ${order.customer.phone})
         </div>
+        ${(order.notes || (order.customer && order.customer.notes)) ? `
+          <div style="margin-top: 10px; font-size: 0.8125rem; color: #92400e; background: #fffbeb; padding: 10px 14px; border-radius: 4px; border: 1px dashed #f59e0b;">
+            <strong>📝 ملاحظة الطلب:</strong> ${escapeHtml(order.notes || order.customer.notes)}
+          </div>
+        ` : ''}
       </div>
     `;
   } catch (err) {

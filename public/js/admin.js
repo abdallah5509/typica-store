@@ -1,3 +1,13 @@
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 // Typica Roastery — Admin Dashboard & Operations Portal Logic
 
 let adminState = {
@@ -298,6 +308,11 @@ function renderAdminOrders() {
           <div style="font-weight: 600;">${customer.name}</div>
           <div style="font-size: 0.8125rem; color: var(--copper); font-family: monospace;">📞 ${customer.phone || ''}</div>
           ${customer.phone2 ? `<div style="font-size: 0.75rem; color: var(--text-muted);">هاتف 2: ${customer.phone2}</div>` : ''}
+          ${(order.notes || customer.notes) ? `
+            <div style="margin-top: 6px; background: #fffbeb; border: 1px dashed #f59e0b; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; color: #92400e; word-break: break-word;">
+              <strong>📝 ملاحظة:</strong> ${escapeHtml(order.notes || customer.notes)}
+            </div>
+          ` : ''}
         </td>
         <td>
           <div style="font-weight: 500; font-size: 0.875rem;">${govCity}</div>

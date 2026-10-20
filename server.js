@@ -604,8 +604,10 @@ const server = http.createServer(async (req, res) => {
             phone2: body.customer.phone2 || "",
             governorate: body.customer.governorate || "القاهرة",
             city: body.customer.city || "",
-            address: body.customer.address || ""
+            address: body.customer.address || "",
+            notes: body.customer.notes || body.notes || ""
           },
+          notes: body.notes || (body.customer && body.customer.notes) || "",
           items: body.items,
           subtotal,
           shipping: shippingFee,
