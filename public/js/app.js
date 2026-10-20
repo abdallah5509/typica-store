@@ -778,8 +778,11 @@ function closeCheckoutModal() {
   }
 }
 
+let isSubmittingOrder = false;
+
 async function handlePlaceOrder(e) {
-  e.preventDefault();
+  if (e && e.preventDefault) e.preventDefault();
+  if (isSubmittingOrder) return;
   const name = document.getElementById('cust-name').value.trim();
   const phone = document.getElementById('cust-phone').value.trim();
   const phone2 = document.getElementById('cust-phone2') ? document.getElementById('cust-phone2').value.trim() : '';
@@ -814,9 +817,13 @@ async function handlePlaceOrder(e) {
     }
   }
 
+  isSubmittingOrder = true;
   const submitBtn = document.getElementById('btn-place-order');
-  submitBtn.disabled = true;
-  submitBtn.innerText = 'جاري تسجيل الطلب وتأكيد الشحن...';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.style.pointerEvents = 'none';
+    submitBtn.innerText = 'جاري تسجيل الطلب وتأكيد الشحن...';
+  }
 
   try {
     let receiptUrl = '';
@@ -882,7 +889,11 @@ async function handlePlaceOrder(e) {
     console.error(err);
     showToast('حدث خطأ في الاتصال، يرجى المحاولة ثانية');
   } finally {
-    submitBtn.disabled = false;
+    isSubmittingOrder = false;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.style.pointerEvents = 'auto';
+    }
     selectPaymentMethod(state.selectedPaymentMethod);
   }
 }

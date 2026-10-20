@@ -328,19 +328,65 @@ function renderAdminOrders() {
           ${receiptButton}
         </td>
         <td><span class="badge-status ${order.status}">${order.status.replace('_', ' ')}</span></td>
-        <td>
-          <select onchange="updateOrderStatus('${order.id}', this.value)" style="padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; background: #fff;">
+        <td style="min-width: 140px;">
+          <select onchange="handleOrderStatusChange('${order.id}', this.value)" style="padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; background: #fff; width: 100%;">
             <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed (تأكيد الشحن)</option>
             <option value="roasting" ${order.status === 'roasting' ? 'selected' : ''}>Roasting (جاري التجهيز)</option>
             <option value="quality_check" ${order.status === 'quality_check' ? 'selected' : ''}>QC / Packing (التغليف)</option>
             <option value="dispatched" ${order.status === 'dispatched' ? 'selected' : ''}>Dispatched (خرج للشحن)</option>
             <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered (تم التوصيل)</option>
             <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled (إلغاء)</option>
+            <option value="__DELETE__" style="color: #dc2626; font-weight: bold; background: #fee2e2;">🗑️ حذف نهائي</option>
           </select>
+          <button type="button" onclick="deleteOrder('${order.id}')" style="margin-top: 6px; width: 100%; background: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; border-radius: 4px; padding: 5px 8px; font-size: 0.75rem; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 4px; transition: background 0.2s;" onmouseover="this.style.background='#fecaca'" onmouseout="this.style.background='#fee2e2'" title="حذف هذا الطلب نهائياً">
+            🗑️ حذف نهائي
+          </button>
         </td>
       </tr>
     `;
   }).join('');
+}
+
+async function handleOrderStatusChange(orderId, newStatus) {
+  if (newStatus === '__DELETE__') {
+    await deleteOrder(orderId);
+  } else {
+    await updateOrderStatus(orderId, newStatus);
+  }
+}
+
+async function deleteOrder(orderId) {
+  const confirmed = confirm(`⚠️ تأكيد الحذف النهائي:\nهل أنت متأكد من حذف الطلب رقم #${orderId} نهائياً؟\nسيتم مسح الطلب بالكامل من لوحة الأدمن وقاعدة البيانات ولا يمكن التراجع عن هذا الإجراء.`);
+  if (!confirmed) {
+    renderAdminOrders();
+    return;
+  }
+
+  try {
+    const res = await adminFetch(`/api/orders/${orderId}`, {
+      method: 'DELETE'
+    });
+    const data = await res.json();
+    if (data.success) {
+      if (typeof showToast === 'function') {
+        showToast(`✓ تم حذف الطلب #${orderId} نهائياً بنجاح`);
+      }
+      adminState.orders = adminState.orders.filter(o => o.id !== orderId);
+      renderAdminOrders();
+      await loadAdminStats();
+    } else {
+      if (typeof showToast === 'function') {
+        showToast(data.error || 'تعذر حذف الطلب');
+      }
+      renderAdminOrders();
+    }
+  } catch (err) {
+    console.error('Error deleting order:', err);
+    if (typeof showToast === 'function') {
+      showToast('حدث خطأ أثناء محاولة حذف الطلب');
+    }
+    renderAdminOrders();
+  }
 }
 
 async function updateOrderStatus(orderId, newStatus) {
@@ -606,4 +652,6 @@ window.handleAddProductSubmit = handleAddProductSubmit;
 window.updateProductStock = updateProductStock;
 window.deleteProduct = deleteProduct;
 window.updateOrderStatus = updateOrderStatus;
+window.handleOrderStatusChange = handleOrderStatusChange;
+window.deleteOrder = deleteOrder;
 window.previewNewProductFile = previewNewProductFile;

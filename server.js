@@ -262,6 +262,7 @@ const server = http.createServer(async (req, res) => {
     const needsAdmin =
       (pathname.startsWith("/api/products") && method !== "GET") ||
       (pathname === "/api/orders" && method === "GET") ||
+      (pathname.startsWith("/api/orders/") && method === "DELETE") ||
       (/^\/api\/orders\/[^\/]+\/status$/.test(pathname)) ||
       (pathname === "/api/stats") ||
       (pathname === "/api/settings" && method !== "GET");
@@ -707,6 +708,24 @@ const server = http.createServer(async (req, res) => {
           saveFileStore(store);
           return sendJSON(res, 200, { success: true, data: order });
         }
+      } catch (err) {
+        return sendJSON(res, 400, { success: false, error: err.message });
+      }
+    }
+
+    // DELETE /api/orders/:id (Admin permanent delete)
+    const orderDeleteMatch = pathname.match(/^\/api\/orders\/([^\/]+)$/);
+    if (orderDeleteMatch && method === "DELETE") {
+      try {
+        const id = orderDeleteMatch[1].toUpperCase();
+        const database = await getDb();
+        if (database) {
+          await database.collection("orders").deleteOne({ id: { $regex: new RegExp(`^${id}$`, "i") } });
+        }
+        const store = getFileStore();
+        store.orders = store.orders.filter(o => o.id.toUpperCase() !== id);
+        saveFileStore(store);
+        return sendJSON(res, 200, { success: true, message: `Order ${id} permanently deleted` });
       } catch (err) {
         return sendJSON(res, 400, { success: false, error: err.message });
       }
