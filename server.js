@@ -254,14 +254,22 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
-    // GET /api/health or /api/ping (Keep-Alive health check)
-    if ((pathname === "/api/health" || pathname === "/api/ping") && method === "GET") {
-      return sendJSON(res, 200, {
+    // GET or HEAD /api/health or /api/ping (Keep-Alive health check for UptimeRobot / Cron)
+    if ((pathname === "/api/health" || pathname === "/api/ping") && (method === "GET" || method === "HEAD")) {
+      res.writeHead(200, {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-cache",
+        "Access-Control-Allow-Origin": "*"
+      });
+      if (method === "HEAD") {
+        return res.end();
+      }
+      return res.end(JSON.stringify({
         status: "ok",
         uptime: Math.floor(process.uptime()),
         timestamp: new Date().toISOString(),
         service: "Typica Specialty Coffee Roasters"
-      });
+      }));
     }
 
     // GET /api/admin/verify
@@ -874,6 +882,7 @@ const server = http.createServer(async (req, res) => {
       const fallback = path.join(PUBLIC_DIR, "index.html");
       if (fs.existsSync(fallback)) {
         res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+        if (method === "HEAD") return res.end();
         return fs.createReadStream(fallback).pipe(res);
       }
       res.writeHead(404, { "Content-Type": "text/plain" });
@@ -887,6 +896,7 @@ const server = http.createServer(async (req, res) => {
       "Content-Type": contentType,
       "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=3600"
     });
+    if (method === "HEAD") return res.end();
     fs.createReadStream(filePath).pipe(res);
   });
 });
