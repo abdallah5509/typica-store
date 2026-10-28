@@ -1,4 +1,5 @@
 const http = require("http");
+const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const url = require("url");
@@ -251,6 +252,16 @@ const server = http.createServer(async (req, res) => {
       } catch (err) {
         return sendJSON(res, 400, { success: false, error: err.message });
       }
+    }
+
+    // GET /api/health or /api/ping (Keep-Alive health check)
+    if ((pathname === "/api/health" || pathname === "/api/ping") && method === "GET") {
+      return sendJSON(res, 200, {
+        status: "ok",
+        uptime: Math.floor(process.uptime()),
+        timestamp: new Date().toISOString(),
+        service: "Typica Specialty Coffee Roasters"
+      });
     }
 
     // GET /api/admin/verify
@@ -892,3 +903,40 @@ server.listen(PORT, () => {
 
 // Initialize MongoDB in background
 initMongoDB();
+
+// --- KEEP-ALIVE SYSTEM (PREVENT RENDER FROM SLEEPING) ---
+const APP_URL = process.env.APP_URL || "https://typica-store.onrender.com";
+const PING_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes (Render free tier spins down after 15 mins)
+
+function startKeepAlive() {
+  console.log("🚀 [Keep-Alive] Self-ping scheduled every 10 mins to maintain 24/7 uptime on Render.");
+  setTimeout(() => {
+    pingSelf();
+    setInterval(pingSelf, PING_INTERVAL_MS);
+  }, 45 * 1000);
+}
+
+function pingSelf() {
+  const pingUrl = `${APP_URL}/api/health`;
+  const isHttps = pingUrl.startsWith("https");
+  const client = isHttps ? https : http;
+
+  const req = client.get(pingUrl, (res) => {
+    let data = "";
+    res.on("data", chunk => data += chunk);
+    res.on("end", () => {
+      console.log(`⏱️ [Keep-Alive] Pinged ${pingUrl} (Status: ${res.statusCode}) - Server active & awake!`);
+    });
+  });
+
+  req.on("error", (err) => {
+    console.warn(`⚠️ [Keep-Alive] Ping notice: ${err.message}`);
+  });
+
+  req.setTimeout(15000, () => {
+    req.abort();
+  });
+}
+
+startKeepAlive();
+

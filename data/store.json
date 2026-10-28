@@ -46,28 +46,6 @@
   ],
   "products": [
     {
-      "id": "typica_1_light",
-      "name": "تيبيكا 1 فاتح",
-      "origin": "توليفة تركية مميزة",
-      "process": "قهوة تركية",
-      "roastLevel": 2,
-      "roastLabel": "فاتح",
-      "price": 160,
-      "category": "single-origin",
-      "collection": "new-arrivals",
-      "notes": [
-        "فاتح",
-        "مذاق مميز",
-        "سعر اقتصادي"
-      ],
-      "image": "/assets/uploads/uplo_1792004765296_6bsgh.jpg",
-      "badge": "تيبيكا 1",
-      "stock": 50,
-      "description": "قهوة تركية كلاسيكية تحميص فاتح بمذاق غني وقوام مميز وسعر اقتصادي يناسب الاستخدام اليومي.",
-      "cuppingScore": 86,
-      "_id": "6ad11e2f22df06549708c051"
-    },
-    {
       "id": "typica_1_medium",
       "name": "تيبيكا 1 وسط",
       "origin": "توليفة تركية مميزة",
@@ -86,118 +64,28 @@
       "badge": "تيبيكا 1",
       "stock": 50,
       "description": "قهوة تركية كلاسيكية تحميص وسط متوازن بمذاق أصيل ونكهة تقليدية رائعة.",
-      "cuppingScore": 86.5,
-      "_id": "6ad11e2f22df06549708c052"
+      "cuppingScore": 86.5
     },
     {
-      "id": "typica_1_dark",
-      "name": "تيبيكا 1 غامق",
+      "id": "typica_1_light",
+      "name": "تيبيكا 1 فاتح",
       "origin": "توليفة تركية مميزة",
       "process": "قهوة تركية",
-      "roastLevel": 5,
-      "roastLabel": "غامق",
+      "roastLevel": 2,
+      "roastLabel": "فاتح",
       "price": 160,
       "category": "single-origin",
       "collection": "new-arrivals",
       "notes": [
-        "غامق",
-        "مذاق قوي",
+        "فاتح",
+        "مذاق مميز",
         "سعر اقتصادي"
       ],
-      "image": "/assets/uploads/uplo_1792004807237_1xpw6.jpg",
+      "image": "/assets/uploads/uplo_1792004765296_6bsgh.jpg",
       "badge": "تيبيكا 1",
       "stock": 50,
-      "description": "قهوة تركية كلاسيكية تحميص غامق بمذاق قوي ومرارة محببة لعشاق القهوة الثقيلة.",
-      "cuppingScore": 86,
-      "_id": "6ad11e2f22df06549708c053"
-    },
-    {
-      "id": "p_1792004765545",
-      "name": "تيبيكا 2 فاتح",
-      "origin": "85% أرابيكا",
-      "process": "قهوة تركية",
-      "roastLevel": 2,
-      "roastLabel": "فاتح",
-      "price": 200,
-      "category": "single-origin",
-      "collection": "new-arrivals",
-      "notes": [
-        "فاتح",
-        "قوام ناعم",
-        "85% أرابيكا"
-      ],
-      "image": "/assets/uploads/uplo_1792004765296_6bsgh.jpg",
-      "badge": "تيبيكا 2",
-      "stock": 50,
-      "description": "قهوة تركية فاخرة 85% أرابيكا تحميص فاتح بمذاق غني وقوام ناعم وطعم أصيل.",
-      "cuppingScore": 89,
-      "_id": "6ad11e2f22df06549708c054"
-    },
-    {
-      "id": "p_1792004789092",
-      "name": "تيبيكا 2 وسط",
-      "origin": "85% أرابيكا",
-      "process": "قهوة تركية",
-      "roastLevel": 3,
-      "roastLabel": "وسط",
-      "price": 200,
-      "category": "single-origin",
-      "collection": "new-arrivals",
-      "notes": [
-        "وسط",
-        "متوازن",
-        "85% أرابيكا"
-      ],
-      "image": "/assets/uploads/uplo_1792004788534_y1flr.jpg",
-      "badge": "تيبيكا 2",
-      "stock": 50,
-      "description": "قهوة تركية فاخرة 85% أرابيكا تحميص وسط متوازن بنكهة كلاسيكية ساحرة.",
-      "cuppingScore": 89.5,
-      "_id": "6ad11e2f22df06549708c055"
-    },
-    {
-      "id": "p_1792004808039",
-      "name": "تيبيكا 2 غامق",
-      "origin": "85% أرابيكا",
-      "process": "قهوة تركية",
-      "roastLevel": 5,
-      "roastLabel": "غامق",
-      "price": 200,
-      "category": "single-origin",
-      "collection": "new-arrivals",
-      "notes": [
-        "غامق",
-        "مذاق قوي",
-        "85% أرابيكا"
-      ],
-      "image": "/assets/uploads/uplo_1792004807237_1xpw6.jpg",
-      "badge": "تيبيكا 2",
-      "stock": 50,
-      "description": "قهوة تركية فاخرة 85% أرابيكا تحميص غامق بمذاق قوي ورائحة نفاذة تدوم طويلاً.",
-      "cuppingScore": 88.5,
-      "_id": "6ad11e2f22df06549708c056"
-    },
-    {
-      "id": "typica_hazelnut",
-      "name": "تيبيكا بندق",
-      "origin": "85% أرابيكا",
-      "process": "قهوة تركية بنكهة البندق",
-      "roastLevel": 3,
-      "roastLabel": "وسط",
-      "price": 200,
-      "category": "single-origin",
-      "collection": "new-arrivals",
-      "notes": [
-        "بندق طبيعي",
-        "قوام ناعم",
-        "85% أرابيكا"
-      ],
-      "image": "/assets/uploads/typica-hazelnut.jpg",
-      "badge": "بندق",
-      "stock": 50,
-      "description": "قهوة تركية فاخرة 85% أرابيكا غنية برائحة ونكهة البندق المحمص الفاخر لمذاق استثنائي ممتع.",
-      "cuppingScore": 90,
-      "_id": "6ad11e2f22df06549708c057"
+      "description": "قهوة تركية كلاسيكية تحميص فاتح بمذاق غني وقوام مميز وسعر اقتصادي يناسب الاستخدام اليومي.",
+      "cuppingScore": 86
     },
     {
       "id": "typica_espresso",
@@ -218,8 +106,70 @@
       "badge": "100% أرابيكا",
       "stock": 50,
       "description": "إسبريسو مختص فاخر 100% أرابيكا بنكهة مركزة وكريمة ذهبية غنية تمنحك طاقة ومذاق لا يُنسى.",
-      "cuppingScore": 91,
-      "_id": "6ad11e2f22df06549708c058"
+      "cuppingScore": 91
+    },
+    {
+      "id": "p_1792004789092",
+      "name": "تيبيكا 2 وسط",
+      "origin": "85% أرابيكا",
+      "process": "قهوة تركية",
+      "roastLevel": 3,
+      "roastLabel": "وسط",
+      "price": 200,
+      "category": "single-origin",
+      "collection": "new-arrivals",
+      "notes": [
+        "وسط",
+        "متوازن",
+        "85% أرابيكا"
+      ],
+      "image": "/assets/uploads/uplo_1792004788534_y1flr.jpg",
+      "badge": "تيبيكا 2",
+      "stock": 50,
+      "description": "قهوة تركية فاخرة 85% أرابيكا تحميص وسط متوازن بنكهة كلاسيكية ساحرة.",
+      "cuppingScore": 89.5
+    },
+    {
+      "id": "typica_hazelnut",
+      "name": "تيبيكا بندق",
+      "origin": "85% أرابيكا",
+      "process": "قهوة تركية بنكهة البندق",
+      "roastLevel": 3,
+      "roastLabel": "وسط",
+      "price": 200,
+      "category": "single-origin",
+      "collection": "new-arrivals",
+      "notes": [
+        "بندق طبيعي",
+        "قوام ناعم",
+        "85% أرابيكا"
+      ],
+      "image": "/assets/uploads/typica-hazelnut.jpg",
+      "badge": "بندق",
+      "stock": 50,
+      "description": "قهوة تركية فاخرة 85% أرابيكا غنية برائحة ونكهة البندق المحمص الفاخر لمذاق استثنائي ممتع.",
+      "cuppingScore": 90
+    },
+    {
+      "id": "p_1792004808039",
+      "name": "تيبيكا 2 غامق",
+      "origin": "85% أرابيكا",
+      "process": "قهوة تركية",
+      "roastLevel": 5,
+      "roastLabel": "غامق",
+      "price": 200,
+      "category": "single-origin",
+      "collection": "new-arrivals",
+      "notes": [
+        "غامق",
+        "مذاق قوي",
+        "85% أرابيكا"
+      ],
+      "image": "/assets/uploads/uplo_1792004807237_1xpw6.jpg",
+      "badge": "تيبيكا 2",
+      "stock": 50,
+      "description": "قهوة تركية فاخرة 85% أرابيكا تحميص غامق بمذاق قوي ورائحة نفاذة تدوم طويلاً.",
+      "cuppingScore": 88.5
     },
     {
       "id": "typica_medium_100",
@@ -240,8 +190,49 @@
       "badge": "100% أرابيكا",
       "stock": 50,
       "description": "قهوة تركية فاخرة مختصة من حبوب 100% أرابيكا الصافية بتحميص وسط متوازن وأعلى درجات النقاء.",
-      "cuppingScore": 91.5,
-      "_id": "6ad11e2f22df06549708c059"
+      "cuppingScore": 91.5
+    },
+    {
+      "id": "typica_1_dark",
+      "name": "تيبيكا 1 غامق",
+      "origin": "توليفة تركية مميزة",
+      "process": "قهوة تركية",
+      "roastLevel": 5,
+      "roastLabel": "غامق",
+      "price": 160,
+      "category": "single-origin",
+      "collection": "new-arrivals",
+      "notes": [
+        "غامق",
+        "مذاق قوي",
+        "سعر اقتصادي"
+      ],
+      "image": "/assets/uploads/uplo_1792004807237_1xpw6.jpg",
+      "badge": "تيبيكا 1",
+      "stock": 50,
+      "description": "قهوة تركية كلاسيكية تحميص غامق بمذاق قوي ومرارة محببة لعشاق القهوة الثقيلة.",
+      "cuppingScore": 86
+    },
+    {
+      "id": "p_1792004765545",
+      "name": "تيبيكا 2 فاتح",
+      "origin": "85% أرابيكا",
+      "process": "قهوة تركية",
+      "roastLevel": 2,
+      "roastLabel": "فاتح",
+      "price": 200,
+      "category": "single-origin",
+      "collection": "new-arrivals",
+      "notes": [
+        "فاتح",
+        "قوام ناعم",
+        "85% أرابيكا"
+      ],
+      "image": "/assets/uploads/uplo_1792004765296_6bsgh.jpg",
+      "badge": "تيبيكا 2",
+      "stock": 50,
+      "description": "قهوة تركية فاخرة 85% أرابيكا تحميص فاتح بمذاق غني وقوام ناعم وطعم أصيل.",
+      "cuppingScore": 89
     }
   ],
   "orders": [
